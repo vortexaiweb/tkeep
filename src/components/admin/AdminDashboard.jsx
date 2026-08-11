@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { LayoutDashboard, Package, Layers, Download, ArrowLeft, Plus } from 'lucide-react';
+import { LayoutDashboard, Package, Layers, Download, ArrowLeft, Plus, FolderGit2 } from 'lucide-react';
 import { AdminStats } from './AdminStats';
 import { ProductListAdmin } from './ProductListAdmin';
 import { CategoryManager } from './CategoryManager';
 import { KufarImporter } from './KufarImporter';
+import { PortfolioImporter } from './PortfolioImporter';
 import { ProductEditModal } from './ProductEditModal';
 
 export const AdminDashboard = ({ 
@@ -20,7 +21,7 @@ export const AdminDashboard = ({
   onUpdateCategory, 
   onDeleteCategory 
 }) => {
-  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'products', 'categories', 'kufar'
+  const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'products', 'categories', 'kufar', 'portfolio'
   const [editingItem, setEditingItem] = useState(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 
@@ -108,6 +109,18 @@ export const AdminDashboard = ({
             <Download className="w-4 h-4" />
             <span>Импорт с Куфара</span>
           </button>
+
+          <button
+            onClick={() => setActiveTab('portfolio')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+              activeTab === 'portfolio'
+                ? 'bg-cyan-500 text-gray-950 shadow-md shadow-cyan-500/30'
+                : 'text-cyan-400 hover:bg-cyan-500/10'
+            }`}
+          >
+            <FolderGit2 className="w-4 h-4" />
+            <span>Импорт с Портфолио</span>
+          </button>
         </div>
       </div>
 
@@ -119,12 +132,13 @@ export const AdminDashboard = ({
             categories={categories}
             onOpenAddProduct={handleOpenAddProduct}
             onOpenImportKufar={() => setActiveTab('kufar')}
+            onOpenImportPortfolio={() => setActiveTab('portfolio')}
             onOpenAddCategory={() => setActiveTab('categories')}
           />
 
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-gray-100">Последние добавленные товары</h3>
+              <h3 className="text-lg font-bold text-gray-100">Последние добавленные товары и услуги</h3>
               <button
                 onClick={() => setActiveTab('products')}
                 className="text-xs font-bold text-emerald-400 hover:underline"
@@ -182,6 +196,16 @@ export const AdminDashboard = ({
 
       {activeTab === 'kufar' && (
         <KufarImporter
+          categories={categories}
+          onImportSave={(newItem) => {
+            onAddProduct(newItem);
+            setActiveTab('products');
+          }}
+        />
+      )}
+
+      {activeTab === 'portfolio' && (
+        <PortfolioImporter
           categories={categories}
           onImportSave={(newItem) => {
             onAddProduct(newItem);
