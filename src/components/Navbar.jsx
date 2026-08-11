@@ -1,8 +1,8 @@
 import React from 'react';
-import { Search, ShieldCheck, LogIn, LogOut, Package, Sparkles } from 'lucide-react';
+import { Search, ShieldCheck, LogOut, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-export const Navbar = ({ searchQuery, setSearchQuery, onOpenAdminLogin, onNavigateAdmin, currentView }) => {
+export const Navbar = ({ searchQuery, setSearchQuery, onNavigateAdmin, currentView }) => {
   const { isAdmin, logout } = useAuth();
 
   return (
@@ -54,40 +54,30 @@ export const Navbar = ({ searchQuery, setSearchQuery, onOpenAdminLogin, onNaviga
           </div>
         )}
 
-        {/* Admin Navigation Actions */}
-        <div className="flex items-center gap-3">
-          {isAdmin ? (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={onNavigateAdmin}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-                  currentView === 'admin'
-                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
-                    : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20'
-                }`}
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>Админка</span>
-              </button>
-
-              <button
-                onClick={logout}
-                title="Выйти из админ-панели"
-                className="p-2 rounded-xl text-gray-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all"
-              >
-                <LogOut className="w-5 h-5" />
-              </button>
-            </div>
-          ) : (
+        {/* Admin Actions (Visible ONLY when logged in as Admin) */}
+        {isAdmin && (
+          <div className="flex items-center gap-2">
             <button
-              onClick={onOpenAdminLogin}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white bg-gray-800/80 hover:bg-gray-800 border border-gray-700/60 transition-all shadow-sm"
+              onClick={onNavigateAdmin}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
+                currentView === 'admin'
+                  ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
+                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20'
+              }`}
             >
-              <LogIn className="w-4 h-4 text-emerald-400" />
-              <span>Вход</span>
+              <ShieldCheck className="w-4 h-4" />
+              <span>Админка</span>
             </button>
-          )}
-        </div>
+
+            <button
+              onClick={logout}
+              title="Выйти из админ-панели"
+              className="p-2 rounded-xl text-gray-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
+          </div>
+        )}
 
       </div>
     </header>

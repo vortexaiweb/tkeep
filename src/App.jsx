@@ -19,7 +19,7 @@ import { ProductDetailModal } from './components/ProductDetailModal';
 import { Footer } from './components/Footer';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminDashboard } from './components/admin/AdminDashboard';
-import { Sparkles, Shield } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 export function App() {
   const { isAdmin } = useAuth();
@@ -58,7 +58,7 @@ export function App() {
     };
   }, [isAdmin]);
 
-  // Hash Routing (#/item/:id or #/admin)
+  // Direct Address / Hash Routing (#/admin or #/login opens hidden admin entry)
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash;
@@ -69,7 +69,7 @@ export function App() {
           setSelectedItem(target);
           setCurrentView('catalog');
         }
-      } else if (hash === '#/admin') {
+      } else if (hash === '#/admin' || hash === '#/login') {
         if (isAdmin) {
           setCurrentView('admin');
         } else {
@@ -156,6 +156,13 @@ export function App() {
     }
   };
 
+  const handleCloseAdminLoginModal = () => {
+    setIsAdminLoginOpen(false);
+    if (!isAdmin && (window.location.hash === '#/admin' || window.location.hash === '#/login')) {
+      window.location.hash = '#/';
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#0b0f19] text-gray-100 selection:bg-emerald-500 selection:text-white">
       
@@ -163,10 +170,10 @@ export function App() {
       <Navbar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        onOpenAdminLogin={() => setIsAdminLoginOpen(true)}
         onNavigateAdmin={() => {
-          setCurrentView(currentView === 'admin' ? 'catalog' : 'admin');
-          window.location.hash = currentView === 'admin' ? '#/' : '#/admin';
+          const nextView = currentView === 'admin' ? 'catalog' : 'admin';
+          setCurrentView(nextView);
+          window.location.hash = nextView === 'admin' ? '#/admin' : '#/';
         }}
         currentView={currentView}
       />
@@ -253,10 +260,10 @@ export function App() {
         />
       )}
 
-      {/* Admin Login Modal */}
+      {/* Admin Login Modal (Triggered strictly via URL hash #/admin or #/login) */}
       <AdminLoginModal
         isOpen={isAdminLoginOpen}
-        onClose={() => setIsAdminLoginOpen(false)}
+        onClose={handleCloseAdminLoginModal}
         onSuccess={() => {
           setCurrentView('admin');
           window.location.hash = '#/admin';
@@ -264,10 +271,7 @@ export function App() {
       />
 
       {/* Persistent Footer with Prominent Telegram Link */}
-      <Footer
-        onOpenAdminLogin={() => setIsAdminLoginOpen(true)}
-        isAdmin={isAdmin}
-      />
+      <Footer />
 
     </div>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Send, Sparkles, ShieldCheck } from 'lucide-react';
+import { Send, Sparkles } from 'lucide-react';
 
-export const Footer = ({ onOpenAdminLogin, isAdmin }) => {
+export const Footer = () => {
   return (
     <footer className="w-full glass-panel border-t border-gray-800 mt-16 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8">
@@ -37,19 +37,6 @@ export const Footer = ({ onOpenAdminLogin, isAdmin }) => {
               <span className="text-base font-extrabold">t.me/tkeepk</span>
             </div>
           </a>
-        </div>
-
-        {/* Footer Links & Admin Access */}
-        <div className="flex items-center gap-4 text-xs text-gray-400">
-          {!isAdmin && (
-            <button
-              onClick={onOpenAdminLogin}
-              className="flex items-center gap-1.5 hover:text-emerald-400 transition-colors"
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>Панель управления</span>
-            </button>
-          )}
         </div>
 
       </div>
