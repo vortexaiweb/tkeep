@@ -8,8 +8,12 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
   const handleShare = (e) => {
     e.stopPropagation();
     const shareUrl = `${window.location.origin}${window.location.pathname}#/item/${item.id}`;
-    navigator.clipboard.writeText(shareUrl);
-    showToast('Ссылка на товар скопирована в буфер обмена!', 'success');
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(shareUrl);
+      showToast('Ссылка на товар скопирована в буфер обмена!', 'success');
+    } else {
+      showToast(`Ссылка: ${shareUrl}`, 'info');
+    }
   };
 
   const mainImage = item.images && item.images.length > 0 ? item.images[0] : 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=800';

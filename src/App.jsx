@@ -43,16 +43,22 @@ export function App() {
   useEffect(() => {
     seedInitialData();
 
+    // Fallback timer to prevent getting stuck in loading state forever
+    const loadingTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2500);
+
     const unsubCat = subscribeCategories((cats) => {
-      setCategories(cats);
+      setCategories(Array.isArray(cats) ? cats : []);
     });
 
     const unsubItems = subscribeItems((itemList) => {
-      setItems(itemList);
+      setItems(Array.isArray(itemList) ? itemList : []);
       setIsLoading(false);
     }, isAdmin);
 
     return () => {
+      clearTimeout(loadingTimer);
       unsubCat();
       unsubItems();
     };
@@ -64,7 +70,7 @@ export function App() {
       const hash = window.location.hash;
       if (hash.startsWith('#/item/')) {
         const itemId = hash.replace('#/item/', '');
-        const target = items.find((i) => i.id === itemId);
+        const target = items.find((i) => i && i.id === itemId);
         if (target) {
           setSelectedItem(target);
           setCurrentView('catalog');
@@ -88,20 +94,24 @@ export function App() {
   // Categories Lookup Map
   const categoriesMap = useMemo(() => {
     const map = {};
-    categories.forEach((cat) => {
-      map[cat.id] = cat;
+    (categories || []).forEach((cat) => {
+      if (cat && cat.id) {
+        map[cat.id] = cat;
+      }
     });
     return map;
   }, [categories]);
 
   // Count items per category
   const itemsCountByCategory = useMemo(() => {
-    const counts = { all: items.length };
-    categories.forEach((cat) => {
-      counts[cat.id] = 0;
+    const counts = { all: (items || []).length };
+    (categories || []).forEach((cat) => {
+      if (cat && cat.id) {
+        counts[cat.id] = 0;
+      }
     });
-    items.forEach((item) => {
-      if (counts[item.categoryId] !== undefined) {
+    (items || []).forEach((item) => {
+      if (item && counts[item.categoryId] !== undefined) {
         counts[item.categoryId] += 1;
       }
     });
@@ -110,11 +120,13 @@ export function App() {
 
   // Filtered Items for Catalog View
   const filteredItems = useMemo(() => {
-    return items.filter((item) => {
+    return (items || []).filter((item) => {
+      if (!item) return false;
       const matchesCat = selectedCategory === 'all' || item.categoryId === selectedCategory;
-      const matchesSearch = !searchQuery.trim() || 
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));
+      const itemTitle = (item.title || '').toLowerCase();
+      const itemDesc = (item.description || '').toLowerCase();
+      const query = searchQuery.toLowerCase().trim();
+      const matchesSearch = !query || itemTitle.includes(query) || itemDesc.includes(query);
       return matchesCat && matchesSearch;
     });
   }, [items, selectedCategory, searchQuery]);

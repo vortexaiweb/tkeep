@@ -9,9 +9,12 @@ export const ProductListAdmin = ({ items, categoriesMap, onEdit, onDelete, onTog
   const [deletingId, setDeletingId] = useState(null);
   const { showToast } = useToast();
 
-  const filteredItems = items.filter((item) => {
-    const matchesSearch = item.title.toLowerCase().includes(filterSearch.toLowerCase()) ||
-                          (item.description && item.description.toLowerCase().includes(filterSearch.toLowerCase()));
+  const filteredItems = (items || []).filter((item) => {
+    if (!item) return false;
+    const titleStr = (item.title || '').toLowerCase();
+    const descStr = (item.description || '').toLowerCase();
+    const searchStr = filterSearch.toLowerCase().trim();
+    const matchesSearch = !searchStr || titleStr.includes(searchStr) || descStr.includes(searchStr);
     const matchesCat = filterCategory === 'all' || item.categoryId === filterCategory;
     const matchesStat = filterStatus === 'all' || item.status === filterStatus;
     return matchesSearch && matchesCat && matchesStat;

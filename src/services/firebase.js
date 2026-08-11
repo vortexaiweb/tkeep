@@ -179,11 +179,15 @@ export const seedInitialData = async () => {
   }
 
   // Local Storage Seeding
-  if (!localStorage.getItem('tkeep_categories')) {
-    setLocalData('categories', DEMO_CATEGORIES);
-  }
-  if (!localStorage.getItem('tkeep_items')) {
-    setLocalData('items', DEMO_ITEMS);
+  try {
+    if (!localStorage.getItem('tkeep_categories')) {
+      setLocalData('categories', DEMO_CATEGORIES);
+    }
+    if (!localStorage.getItem('tkeep_items')) {
+      setLocalData('items', DEMO_ITEMS);
+    }
+  } catch (e) {
+    console.warn("LocalStorage seed access restricted:", e);
   }
 };
 

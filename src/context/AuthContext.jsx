@@ -12,16 +12,27 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Check initial authentication from localStorage and Firebase Auth
     const checkAuth = () => {
-      const isAuth = checkAdminAuthenticated();
-      if (isAuth) {
-        setIsAdmin(true);
-        const stored = localStorage.getItem('tkeep_admin_user');
-        setAdminUser(stored ? JSON.parse(stored) : { username: 'd2c', role: 'admin' });
-      } else {
+      try {
+        const isAuth = checkAdminAuthenticated();
+        if (isAuth) {
+          setIsAdmin(true);
+          const stored = localStorage.getItem('tkeep_admin_user');
+          try {
+            setAdminUser(stored ? JSON.parse(stored) : { username: 'd2c', role: 'admin' });
+          } catch {
+            setAdminUser({ username: 'd2c', role: 'admin' });
+          }
+        } else {
+          setIsAdmin(false);
+          setAdminUser(null);
+        }
+      } catch (e) {
+        console.warn("Auth check error:", e);
         setIsAdmin(false);
         setAdminUser(null);
+      } finally {
+        setIsAuthLoading(false);
       }
-      setIsAuthLoading(false);
     };
 
     checkAuth();

@@ -22,10 +22,14 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
 
   const handleShare = () => {
     const shareUrl = `${window.location.origin}${window.location.pathname}#/item/${item.id}`;
-    navigator.clipboard.writeText(shareUrl);
-    setCopied(true);
-    showToast('Прямая ссылка на товар скопирована!', 'success');
-    setTimeout(() => setCopied(false), 3000);
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      showToast('Прямая ссылка на товар скопирована!', 'success');
+      setTimeout(() => setCopied(false), 3000);
+    } else {
+      showToast(`Ссылка: ${shareUrl}`, 'info');
+    }
   };
 
   const nextImage = () => {
