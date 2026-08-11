@@ -1,0 +1,19 @@
+{
+  "name": "tkeep-functions",
+  "description": "Firebase Cloud Functions for tkeep Kufar Parser",
+  "scripts": {
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "node-fetch": "^2.6.9"
+  },
+  "private": true
+}

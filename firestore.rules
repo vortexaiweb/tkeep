@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if request is from an authenticated admin
+    function isAdmin() {
+      return request.auth != null;
+    }
+
+    // Categories Collection: Public read access, Admin write access
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Items Collection: Public read for active status, Admin full access
+    match /items/{itemId} {
+      allow read: if resource.data.status == 'active' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Users Collection: Authenticated user access
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
