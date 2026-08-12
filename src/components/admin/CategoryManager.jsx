@@ -54,7 +54,7 @@ export const CategoryManager = ({ categories, itemsCountByCategory, onAddCategor
       <div className="flex items-center justify-between p-6 glass-panel rounded-3xl border border-gray-800">
         <div>
           <h2 className="text-xl font-extrabold text-gray-100 flex items-center gap-2">
-            <Layers className="w-5 h-5 text-emerald-400" />
+            <Layers className="w-5 h-5 text-[#FF758F]" />
             <span>Управление категориями</span>
           </h2>
           <p className="text-xs text-gray-400 mt-1">Категории сохраняются в Firestore и привязываются к товарам</p>
@@ -62,7 +62,7 @@ export const CategoryManager = ({ categories, itemsCountByCategory, onAddCategor
 
         <button
           onClick={handleOpenAdd}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-lg shadow-emerald-600/30"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white text-xs font-bold transition-all shadow-lg shadow-rose-500/25"
         >
           <Plus className="w-4 h-4" />
           <span>Новая категория</span>
@@ -88,7 +88,7 @@ export const CategoryManager = ({ categories, itemsCountByCategory, onAddCategor
                   <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5">
                     <span>Сортировка: #{cat.sortOrder || 1}</span>
                     <span>•</span>
-                    <span className="text-emerald-400 font-semibold">{itemCount} товаров</span>
+                    <span className="text-[#FF758F] font-semibold">{itemCount} товаров</span>
                   </div>
                 </div>
               </div>
@@ -96,7 +96,7 @@ export const CategoryManager = ({ categories, itemsCountByCategory, onAddCategor
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleOpenEdit(cat)}
-                  className="p-2 rounded-xl text-gray-300 hover:text-emerald-400 bg-gray-800 hover:bg-gray-700 transition-all"
+                  className="p-2 rounded-xl text-gray-300 hover:text-[#FF758F] bg-gray-800 hover:bg-gray-700 transition-all"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
@@ -157,7 +157,7 @@ export const CategoryManager = ({ categories, itemsCountByCategory, onAddCategor
                   placeholder="Электроника"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2.5 border border-gray-800 focus:border-emerald-500 outline-none"
+                  className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2.5 border border-gray-800 focus:border-rose-500 outline-none"
                 />
               </div>
 
@@ -170,7 +170,7 @@ export const CategoryManager = ({ categories, itemsCountByCategory, onAddCategor
                     type="text"
                     value={formData.icon}
                     onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                    className="w-16 text-center bg-gray-900 text-xl rounded-xl p-2 border border-gray-800 focus:border-emerald-500 outline-none"
+                    className="w-16 text-center bg-gray-900 text-xl rounded-xl p-2 border border-gray-800 focus:border-rose-500 outline-none"
                   />
                   <span className="text-xs text-gray-400">Или выберите из пресетов:</span>
                 </div>
@@ -182,7 +182,7 @@ export const CategoryManager = ({ categories, itemsCountByCategory, onAddCategor
                       type="button"
                       onClick={() => setFormData({ ...formData, icon: emoji })}
                       className={`w-9 h-9 rounded-lg text-lg flex items-center justify-center transition-all ${
-                        formData.icon === emoji ? 'bg-emerald-600 scale-110' : 'hover:bg-gray-800'
+                        formData.icon === emoji ? 'bg-rose-600 scale-110' : 'hover:bg-gray-800'
                       }`}
                     >
                       {emoji}
@@ -200,7 +200,7 @@ export const CategoryManager = ({ categories, itemsCountByCategory, onAddCategor
                   min="1"
                   value={formData.sortOrder}
                   onChange={(e) => setFormData({ ...formData, sortOrder: Number(e.target.value) })}
-                  className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2.5 border border-gray-800 focus:border-emerald-500 outline-none"
+                  className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2.5 border border-gray-800 focus:border-rose-500 outline-none"
                 />
               </div>
 
@@ -214,7 +214,7 @@ export const CategoryManager = ({ categories, itemsCountByCategory, onAddCategor
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-sm"
                 >
                   Сохранить
                 </button>

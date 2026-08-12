@@ -51,7 +51,7 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800 bg-gray-900/90">
           <div className="flex items-center gap-2">
             {category && (
-              <span className="px-3 py-1 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="px-3 py-1 rounded-xl text-xs font-semibold bg-[#FF758F]/10 text-[#FF758F] border border-[#FF758F]/25">
                 {category.icon} {category.name}
               </span>
             )}
@@ -115,7 +115,7 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
                       onClick={() => setSelectedImageIndex(idx)}
                       className={`relative w-16 h-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
                         selectedImageIndex === idx
-                          ? 'border-emerald-500 scale-105 shadow-md shadow-emerald-500/20'
+                          ? 'border-[#FF758F] scale-105 shadow-md shadow-[#FF758F]/20'
                           : 'border-gray-800 opacity-60 hover:opacity-100'
                       }`}
                     >
@@ -135,10 +135,10 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
 
                 {/* Price Display */}
                 <div className="flex items-baseline gap-2 py-2">
-                  <span className="text-3xl sm:text-4xl font-extrabold text-emerald-400 tracking-tight">
+                  <span className="text-3xl sm:text-4xl font-extrabold text-[#FF758F] tracking-tight">
                     {Number(item.price).toLocaleString('ru-RU')}
                   </span>
-                  <span className="text-lg font-bold text-emerald-300">
+                  <span className="text-lg font-bold text-rose-300">
                     {item.currency || 'BYN'}
                   </span>
                 </div>
@@ -147,7 +147,7 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
                 <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 py-2 border-y border-gray-800">
                   {item.location && (
                     <div className="flex items-center gap-1.5">
-                      <MapPin className="w-4 h-4 text-emerald-400" />
+                      <MapPin className="w-4 h-4 text-[#FF758F]" />
                       <span>{item.location}</span>
                     </div>
                   )}
@@ -176,7 +176,7 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
                   href="https://t.me/tkeepk"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-base transition-all shadow-lg shadow-cyan-600/25 group"
+                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-400 hover:to-pink-400 text-white font-bold text-base transition-all shadow-lg shadow-rose-500/25 group"
                 >
                   <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   <span>Связаться в Telegram (t.me/tkeepk)</span>

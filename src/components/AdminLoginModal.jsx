@@ -45,7 +45,7 @@ export const AdminLoginModal = ({ isOpen, onClose, onSuccess }) => {
         </button>
 
         <div className="flex flex-col items-center text-center mb-6">
-          <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-3 shadow-lg shadow-emerald-500/10">
+          <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 mb-3 shadow-lg shadow-rose-500/10">
             <Lock className="w-7 h-7" />
           </div>
           <h2 className="text-2xl font-extrabold text-gray-100">Вход в админ-панель</h2>
@@ -68,10 +68,10 @@ export const AdminLoginModal = ({ isOpen, onClose, onSuccess }) => {
               <input
                 type="text"
                 required
-                placeholder="d2c"
+                placeholder="Имя пользователя"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-gray-900/90 text-gray-100 placeholder-gray-500 text-sm rounded-xl pl-10 pr-4 py-3 border border-gray-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all outline-none"
+                className="w-full bg-gray-900/90 text-gray-100 placeholder-gray-500 text-sm rounded-xl pl-10 pr-4 py-3 border border-gray-800 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all outline-none"
               />
             </div>
           </div>
@@ -85,10 +85,10 @@ export const AdminLoginModal = ({ isOpen, onClose, onSuccess }) => {
               <input
                 type="password"
                 required
-                placeholder="787352"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-gray-900/90 text-gray-100 placeholder-gray-500 text-sm rounded-xl pl-10 pr-4 py-3 border border-gray-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all outline-none"
+                className="w-full bg-gray-900/90 text-gray-100 placeholder-gray-500 text-sm rounded-xl pl-10 pr-4 py-3 border border-gray-800 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition-all outline-none"
               />
             </div>
           </div>
@@ -97,7 +97,7 @@ export const AdminLoginModal = ({ isOpen, onClose, onSuccess }) => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all shadow-lg shadow-emerald-600/30 disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white font-bold text-sm transition-all shadow-lg shadow-rose-500/25 disabled:opacity-50"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -110,12 +110,6 @@ export const AdminLoginModal = ({ isOpen, onClose, onSuccess }) => {
             </button>
           </div>
         </form>
-
-        <div className="mt-4 pt-4 border-t border-gray-800 text-center">
-          <p className="text-[11px] text-gray-500">
-            Логин по умолчанию: <code className="text-emerald-400">d2c</code> / Пароль: <code className="text-emerald-400">787352</code>
-          </p>
-        </div>
 
       </div>
     </div>

@@ -133,32 +133,43 @@ export function App() {
 
   // Product Actions
   const handleAddProduct = async (productData) => {
-    await addProductItem(productData);
+    const newItem = await addProductItem(productData);
+    if (newItem) {
+      setItems((prev) => [newItem, ...prev.filter((i) => i.id !== newItem.id)]);
+    }
   };
 
   const handleUpdateProduct = async (id, productData) => {
     await updateProductItem(id, productData);
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, ...productData } : i)));
   };
 
   const handleDeleteProduct = async (id) => {
     await deleteProductItem(id);
+    setItems((prev) => prev.filter((i) => i && i.id !== id));
   };
 
   const handleToggleProductStatus = async (id, currentStatus) => {
-    await toggleProductStatus(id, currentStatus);
+    const newStatus = await toggleProductStatus(id, currentStatus);
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, status: newStatus } : i)));
   };
 
   // Category Actions
   const handleAddCategory = async (categoryData) => {
-    await addCategoryItem(categoryData);
+    const newCat = await addCategoryItem(categoryData);
+    if (newCat) {
+      setCategories((prev) => [...prev.filter((c) => c.id !== newCat.id), newCat]);
+    }
   };
 
   const handleUpdateCategory = async (id, categoryData) => {
     await updateCategoryItem(id, categoryData);
+    setCategories((prev) => prev.map((c) => (c.id === id ? { ...c, ...categoryData } : c)));
   };
 
   const handleDeleteCategory = async (id) => {
     await deleteCategoryItem(id);
+    setCategories((prev) => prev.filter((c) => c && c.id !== id));
   };
 
   const handleCloseItemModal = () => {
@@ -176,7 +187,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0b0f19] text-gray-100 selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#121319] text-gray-100 selection:bg-[#FF758F] selection:text-white">
       
       {/* Top Navbar */}
       <Navbar
@@ -215,16 +226,16 @@ export function App() {
           <div className="py-6">
             
             {/* Catalog Hero Banner */}
-            <div className="relative glass-panel rounded-3xl p-8 mb-6 overflow-hidden border border-gray-800 bg-gradient-to-r from-gray-900 via-gray-950 to-emerald-950/40">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
+            <div className="relative glass-panel rounded-3xl p-8 mb-6 overflow-hidden border border-gray-800 bg-gradient-to-r from-gray-900 via-[#181a24] to-[#2a1b24]">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-[#FF758F]/10 rounded-full blur-3xl -z-10 pointer-events-none" />
               
               <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold mb-4">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FF758F]/10 border border-[#FF758F]/25 text-[#FF758F] text-xs font-bold mb-4 shadow-sm">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>Официальный каталог товаров</span>
+                  <span>Официальный каталог товаров и услуг</span>
                 </div>
                 <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
-                  Каталог объявлений <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">tkeep</span>
+                  Каталог объявлений <span className="bg-gradient-to-r from-[#FF758F] via-[#FF8A9E] to-rose-400 bg-clip-text text-transparent">tkeep</span>
                 </h1>
                 <p className="text-sm text-gray-300 leading-relaxed">
                   Ищите нужные товары, используйте фильтры по категориям и напрямую связывайтесь с нами в Telegram для покупки или вопросов.

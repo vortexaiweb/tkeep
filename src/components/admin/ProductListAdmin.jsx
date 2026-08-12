@@ -134,7 +134,7 @@ export const ProductListAdmin = ({ items, categoriesMap, onEdit, onDelete, onTog
                       </td>
 
                       {/* Price */}
-                      <td className="py-3 px-4 whitespace-nowrap font-bold text-emerald-400">
+                      <td className="py-3 px-4 whitespace-nowrap font-bold text-[#FF758F]">
                         {Number(item.price).toLocaleString('ru-RU')} {item.currency || 'BYN'}
                       </td>
 
@@ -144,8 +144,8 @@ export const ProductListAdmin = ({ items, categoriesMap, onEdit, onDelete, onTog
                           onClick={() => onToggleStatus(item.id, item.status)}
                           className={`flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold transition-all ${
                             item.status === 'active'
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20'
-                              : 'bg-rose-500/10 text-rose-400 border border-rose-500/30 hover:bg-rose-500/20'
+                              ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30 hover:bg-rose-500/20'
+                              : 'bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20'
                           }`}
                         >
                           {item.status === 'active' ? (
@@ -166,7 +166,7 @@ export const ProductListAdmin = ({ items, categoriesMap, onEdit, onDelete, onTog
                           <button
                             onClick={() => onEdit(item)}
                             title="Редактировать"
-                            className="p-2 rounded-xl text-gray-300 hover:text-emerald-400 bg-gray-800 hover:bg-gray-700 transition-all"
+                            className="p-2 rounded-xl text-gray-300 hover:text-[#FF758F] bg-gray-800 hover:bg-gray-700 transition-all"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>

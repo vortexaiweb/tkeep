@@ -66,7 +66,7 @@ export const AdminDashboard = ({
             onClick={() => setActiveTab('dashboard')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
               activeTab === 'dashboard'
-                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
+                ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md shadow-rose-500/25'
                 : 'text-gray-400 hover:text-white hover:bg-gray-800/60'
             }`}
           >
@@ -78,7 +78,7 @@ export const AdminDashboard = ({
             onClick={() => setActiveTab('products')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
               activeTab === 'products'
-                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
+                ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md shadow-rose-500/25'
                 : 'text-gray-400 hover:text-white hover:bg-gray-800/60'
             }`}
           >
@@ -90,7 +90,7 @@ export const AdminDashboard = ({
             onClick={() => setActiveTab('categories')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
               activeTab === 'categories'
-                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
+                ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-md shadow-rose-500/25'
                 : 'text-gray-400 hover:text-white hover:bg-gray-800/60'
             }`}
           >
@@ -141,7 +141,7 @@ export const AdminDashboard = ({
               <h3 className="text-lg font-bold text-gray-100">Последние добавленные товары и услуги</h3>
               <button
                 onClick={() => setActiveTab('products')}
-                className="text-xs font-bold text-emerald-400 hover:underline"
+                className="text-xs font-bold text-[#FF758F] hover:underline"
               >
                 Посмотреть все товары →
               </button>
@@ -165,7 +165,7 @@ export const AdminDashboard = ({
             <h2 className="text-xl font-extrabold text-gray-100">Все товары каталога</h2>
             <button
               onClick={handleOpenAddProduct}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-lg shadow-emerald-600/30"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white text-xs font-bold transition-all shadow-lg shadow-rose-500/25"
             >
               <Plus className="w-4 h-4" />
               <span>Добавить товар</span>

@@ -240,7 +240,7 @@ export const ProductEditModal = ({ isOpen, onClose, onSave, item, categories }) 
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition-all shadow-lg shadow-emerald-600/30"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white font-bold text-sm transition-all shadow-lg shadow-rose-500/25"
             >
               <Save className="w-4 h-4" />
               <span>Сохранить</span>

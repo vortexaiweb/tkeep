@@ -2,19 +2,19 @@
 
 @layer base {
   :root {
-    --bg-main: #0B0F19;
-    --bg-card: rgba(17, 24, 39, 0.7);
-    --bg-glass: rgba(31, 41, 55, 0.5);
-    --accent: #10B981;
-    --accent-glow: rgba(16, 185, 129, 0.25);
-    --accent-hover: #059669;
+    --bg-main: #121319;
+    --bg-card: rgba(26, 28, 38, 0.75);
+    --bg-glass: rgba(32, 35, 48, 0.6);
+    --accent: #FF758F;
+    --accent-glow: rgba(255, 117, 143, 0.28);
+    --accent-hover: #FF5277;
     --text-primary: #F9FAFB;
     --text-secondary: #9CA3AF;
     --border-color: rgba(255, 255, 255, 0.08);
   }
 
   body {
-    background-color: #0b0f19;
+    background-color: #121319;
     color: #f9fafb;
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     min-height: 100vh;
@@ -24,14 +24,14 @@
 
 /* Custom Utilities & Animations */
 .glass-panel {
-  background: rgba(17, 24, 39, 0.65);
+  background: rgba(24, 26, 36, 0.75);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glass-card {
-  background: rgba(24, 32, 47, 0.7);
+  background: rgba(28, 30, 42, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.07);
@@ -40,16 +40,16 @@
 
 .glass-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(16, 185, 129, 0.3);
-  box-shadow: 0 12px 30px -10px rgba(16, 185, 129, 0.15);
+  border-color: rgba(255, 117, 143, 0.35);
+  box-shadow: 0 12px 30px -10px rgba(255, 117, 143, 0.2);
 }
 
-.glow-emerald {
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
+.glow-peach {
+  box-shadow: 0 0 20px rgba(255, 117, 143, 0.35);
 }
 
 .glow-text {
-  text-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+  text-shadow: 0 0 12px rgba(255, 117, 143, 0.4);
 }
 
 /* Scrollbar customization */
@@ -59,16 +59,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0f19;
+  background: #121319;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1f2937;
+  background: #272a38;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #374151;
+  background: #373b4e;
 }
 
 /* Skeleton Loading Shimmer */
@@ -82,7 +82,7 @@
 }
 
 .animate-skeleton {
-  background: linear-gradient(90deg, #1f2937 25%, #374151 37%, #1f2937 63%);
+  background: linear-gradient(90deg, #1d202c 25%, #2c3042 37%, #1d202c 63%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }

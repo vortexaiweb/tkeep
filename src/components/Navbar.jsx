@@ -14,15 +14,15 @@ export const Navbar = ({ searchQuery, setSearchQuery, onNavigateAdmin, currentVi
           href="#/" 
           className="flex items-center gap-3 group focus:outline-none"
         >
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-300">
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-[#FF758F] to-rose-400 flex items-center justify-center shadow-lg shadow-[#FF758F]/20 group-hover:scale-105 transition-transform duration-300">
             <Sparkles className="w-6 h-6 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-gray-100 to-emerald-400 bg-clip-text text-transparent">
+              <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-gray-100 to-[#FF758F] bg-clip-text text-transparent">
                 tkeep
               </span>
-              <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-[#FF758F]/10 text-[#FF758F] border border-[#FF758F]/25">
                 Каталог
               </span>
             </div>
@@ -40,7 +40,7 @@ export const Navbar = ({ searchQuery, setSearchQuery, onNavigateAdmin, currentVi
                 placeholder="Поиск по названию или описанию..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-gray-900/80 text-gray-100 placeholder-gray-500 text-sm rounded-xl pl-10 pr-4 py-2.5 border border-gray-800 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all outline-none"
+                className="w-full bg-gray-900/90 text-gray-100 placeholder-gray-500 text-sm rounded-xl pl-10 pr-4 py-2.5 border border-gray-800 focus:border-[#FF758F] focus:ring-1 focus:ring-[#FF758F] transition-all outline-none"
               />
               {searchQuery && (
                 <button
@@ -61,8 +61,8 @@ export const Navbar = ({ searchQuery, setSearchQuery, onNavigateAdmin, currentVi
               onClick={onNavigateAdmin}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
                 currentView === 'admin'
-                  ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
-                  : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20'
+                  ? 'bg-gradient-to-r from-[#FF758F] to-rose-500 text-white shadow-lg shadow-[#FF758F]/25'
+                  : 'bg-[#FF758F]/10 text-[#FF758F] border border-[#FF758F]/30 hover:bg-[#FF758F]/20'
               }`}
             >
               <ShieldCheck className="w-4 h-4" />

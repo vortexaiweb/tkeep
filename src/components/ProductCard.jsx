@@ -21,7 +21,7 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
   return (
     <div
       onClick={() => onSelect(item)}
-      className="group relative glass-card rounded-2xl overflow-hidden cursor-pointer flex flex-col h-full border border-gray-800 hover:border-emerald-500/40 transition-all duration-300"
+      className="group relative glass-card rounded-2xl overflow-hidden cursor-pointer flex flex-col h-full border border-gray-800 hover:border-[#FF758F]/40 transition-all duration-300"
     >
       {/* Image Container */}
       <div className="relative aspect-[4/3] w-full bg-gray-900 overflow-hidden">
@@ -41,7 +41,7 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
           {category && (
-            <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-gray-950/80 backdrop-blur-md text-emerald-400 border border-emerald-500/20">
+            <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-gray-950/80 backdrop-blur-md text-[#FF758F] border border-[#FF758F]/25">
               {category.icon} {category.name}
             </span>
           )}
@@ -65,7 +65,7 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
         <button
           onClick={handleShare}
           title="Поделиться ссылкой"
-          className="absolute bottom-3 right-3 p-2 rounded-xl bg-gray-900/80 backdrop-blur-md text-gray-300 hover:text-emerald-400 hover:bg-gray-800 border border-gray-700/50 transition-all opacity-0 group-hover:opacity-100 z-10"
+          className="absolute bottom-3 right-3 p-2 rounded-xl bg-gray-900/80 backdrop-blur-md text-gray-300 hover:text-[#FF758F] hover:bg-gray-800 border border-gray-700/50 transition-all opacity-0 group-hover:opacity-100 z-10"
         >
           <Share2 className="w-4 h-4" />
         </button>
@@ -75,7 +75,7 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
       <div className="p-5 flex flex-col flex-1 justify-between gap-4">
         <div>
           <div className="flex items-start justify-between gap-2 mb-2">
-            <h3 className="text-lg font-bold text-gray-100 group-hover:text-emerald-400 transition-colors line-clamp-2 leading-snug">
+            <h3 className="text-lg font-bold text-gray-100 group-hover:text-[#FF758F] transition-colors line-clamp-2 leading-snug">
               {item.title}
             </h3>
           </div>
@@ -88,8 +88,8 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
         {/* Bottom Details */}
         <div className="flex items-end justify-between gap-2 pt-3 border-t border-gray-800/60">
           <div>
-            <div className="text-xl font-extrabold text-emerald-400 tracking-tight">
-              {Number(item.price).toLocaleString('ru-RU')} <span className="text-sm font-semibold text-emerald-300">{item.currency || 'BYN'}</span>
+            <div className="text-xl font-extrabold text-[#FF758F] tracking-tight">
+              {Number(item.price).toLocaleString('ru-RU')} <span className="text-sm font-semibold text-rose-300">{item.currency || 'BYN'}</span>
             </div>
             {item.location && (
               <div className="flex items-center gap-1 text-[11px] text-gray-400 mt-0.5">
@@ -101,7 +101,7 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
 
           <button
             onClick={() => onSelect(item)}
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-600 group-hover:text-white group-hover:border-emerald-600 transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-[#FF758F]/10 text-[#FF758F] border border-[#FF758F]/25 group-hover:bg-[#FF758F] group-hover:text-white transition-all shadow-sm"
           >
             <Eye className="w-3.5 h-3.5" />
             <span>Подробнее</span>
