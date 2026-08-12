@@ -49,7 +49,7 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
           {portfolioCount > 0 && (
             <span className="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-gradient-to-r from-rose-500 to-pink-500 text-white backdrop-blur-md border border-rose-400/40 flex items-center gap-1 shadow-md">
               <FolderGit2 className="w-3.5 h-3.5" />
-              <span>{portfolioCount} {portfolioCount === 1 ? 'работа' : 'работы'} в портфолио</span>
+              <span>{portfolioCount} {portfolioCount === 1 ? 'проект' : 'проектов'}</span>
             </span>
           )}
           {item.sourceUrl && (
@@ -91,27 +91,39 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
             {item.description || 'Описание отсутствует'}
           </p>
 
-          {/* Portfolio Examples List on Card */}
+          {/* All Portfolio Projects Visible directly on Card */}
           {portfolioCount > 0 && (
-            <div className="mt-2 pt-2 border-t border-gray-800/80">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-[#FF758F] flex items-center gap-1 mb-1.5">
-                <FolderGit2 className="w-3.5 h-3.5" />
-                <span>Примеры портфолио ({portfolioCount}):</span>
+            <div className="mt-3 pt-3 border-t border-gray-800/80 space-y-2">
+              <div className="text-[11px] font-extrabold uppercase tracking-wider text-[#FF758F] flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <FolderGit2 className="w-3.5 h-3.5" />
+                  <span>Портфолио проектов ({portfolioCount}):</span>
+                </span>
               </div>
-              <div className="flex flex-col gap-1">
-                {item.portfolio.slice(0, 2).map((proj, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-xs bg-gray-900/80 px-2.5 py-1.5 rounded-lg border border-gray-800/90 text-gray-300">
-                    <span className="truncate font-medium">{proj.title}</span>
+              
+              <div className="flex flex-col gap-1.5 max-h-48 overflow-y-auto pr-1">
+                {item.portfolio.map((proj, idx) => (
+                  <a
+                    key={idx}
+                    href={proj.liveUrl || proj.sourceUrl || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="group/item flex items-center justify-between text-xs bg-gray-900/90 hover:bg-gray-800 px-3 py-2 rounded-xl border border-gray-800 hover:border-[#FF758F]/50 text-gray-200 transition-all"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      {proj.image && (
+                        <img src={proj.image} alt="" className="w-6 h-6 rounded-md object-cover border border-gray-700 shrink-0" />
+                      )}
+                      <span className="truncate font-semibold text-gray-200 group-hover/item:text-[#FF758F]">{proj.title}</span>
+                    </div>
                     {(proj.liveUrl || proj.sourceUrl) && (
-                      <span className="text-[10px] text-[#FF758F] font-bold shrink-0 ml-2">Демо ↗</span>
+                      <span className="text-[10px] font-bold text-[#FF758F] bg-[#FF758F]/10 px-2 py-0.5 rounded-lg border border-[#FF758F]/20 shrink-0 ml-2">
+                        Демо ↗
+                      </span>
                     )}
-                  </div>
+                  </a>
                 ))}
-                {portfolioCount > 2 && (
-                  <div className="text-[10px] text-gray-400 text-right pt-0.5">
-                    + ещё {portfolioCount - 2}
-                  </div>
-                )}
               </div>
             </div>
           )}
