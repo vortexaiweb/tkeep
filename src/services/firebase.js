@@ -52,17 +52,14 @@ export { db, auth, isConfigured };
 
 // Demo Categories for Seeding
 const DEMO_CATEGORIES = [
-  { id: 'cat_services', name: 'Веб-разработка & Услуги', icon: '💻', sortOrder: 1 },
+  { id: 'cat_services', name: 'Услуги', icon: '🛠️', sortOrder: 1 },
   { id: 'cat_electronics', name: 'Электроника', icon: '📱', sortOrder: 2 },
   { id: 'cat_auto', name: 'Авто и Запчасти', icon: '🚗', sortOrder: 3 },
   { id: 'cat_home', name: 'Дом и Сад', icon: '🏠', sortOrder: 4 }
 ];
 
-// Initial Service Items with Pre-Imported Portfolio Projects from vortexaiweb/portfolio
-const DEMO_ITEMS = [
-    ]
-  }
-];
+// Initial Demo Items (STRICTLY EMPTY by default)
+const DEMO_ITEMS = [];
 
 // LocalStorage Helper for fallback mode
 const getLocalData = (key, defaultVal) => {
@@ -97,17 +94,6 @@ export const seedInitialData = async () => {
           });
         }
       }
-
-      const itemSnap = await getDocs(collection(db, 'items'));
-      if (itemSnap.empty) {
-        for (const item of DEMO_ITEMS) {
-          await setDoc(doc(db, 'items', item.id), {
-            ...item,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp()
-          });
-        }
-      }
     } catch (err) {
       console.warn("Firestore seed fallback to localStorage:", err);
     }
@@ -115,15 +101,23 @@ export const seedInitialData = async () => {
 
   // Local Storage Seeding
   try {
-    const existingItems = getLocalData('items', []);
     if (!localStorage.getItem('tkeep_categories')) {
       setLocalData('categories', DEMO_CATEGORIES);
     }
-    if (!localStorage.getItem('tkeep_items') || existingItems.length === 0) {
-      setLocalData('items', DEMO_ITEMS);
+    if (!localStorage.getItem('tkeep_items')) {
+      setLocalData('items', []);
     }
   } catch (e) {
     console.warn("LocalStorage seed access restricted:", e);
+  }
+};
+
+// Clear All Local Items Helper
+export const clearAllLocalItems = () => {
+  try {
+    localStorage.setItem('tkeep_items', JSON.stringify([]));
+  } catch (e) {
+    console.error("Failed to clear local items", e);
   }
 };
 
@@ -156,19 +150,14 @@ export const subscribeItems = (callback, isAdmin = false) => {
     
     return onSnapshot(q, (snapshot) => {
       const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      if (items.length > 0) {
-        callback(items);
-      } else {
-        const local = getLocalData('items', DEMO_ITEMS);
-        callback(isAdmin ? local : local.filter(i => i.status === 'active'));
-      }
+      callback(items);
     }, (err) => {
       console.warn("Firestore items listener fallback to local:", err);
-      const local = getLocalData('items', DEMO_ITEMS);
+      const local = getLocalData('items', []);
       callback(isAdmin ? local : local.filter(i => i.status === 'active'));
     });
   } else {
-    const local = getLocalData('items', DEMO_ITEMS);
+    const local = getLocalData('items', []);
     callback(isAdmin ? local : local.filter(i => i.status === 'active'));
     return () => {};
   }
@@ -266,7 +255,7 @@ export const addProductItem = async (itemData) => {
     }
   }
 
-  const local = getLocalData('items', DEMO_ITEMS);
+  const local = getLocalData('items', []);
   local.unshift(payload);
   setLocalData('items', local);
   return payload;
@@ -284,7 +273,7 @@ export const updateProductItem = async (id, itemData) => {
     }
   }
 
-  const local = getLocalData('items', DEMO_ITEMS);
+  const local = getLocalData('items', []);
   const index = local.findIndex(i => i.id === id);
   if (index !== -1) {
     local[index] = { ...local[index], ...itemData, updatedAt: new Date().toISOString() };
@@ -301,7 +290,7 @@ export const deleteProductItem = async (id) => {
     }
   }
 
-  const local = getLocalData('items', DEMO_ITEMS);
+  const local = getLocalData('items', []);
   const filtered = local.filter(i => i.id !== id);
   setLocalData('items', filtered);
 };
