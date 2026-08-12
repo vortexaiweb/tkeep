@@ -24,7 +24,6 @@ import {
 } from 'firebase/auth';
 
 // Firebase configuration object.
-// Placeholders are provided for initial setup. Replace with your actual Firebase project credentials.
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "YOUR_API_KEY",
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "YOUR_PROJECT_ID.firebaseapp.com",
@@ -53,17 +52,77 @@ export { db, auth, isConfigured };
 
 // Demo Categories for Seeding
 const DEMO_CATEGORIES = [
-  { id: 'cat_electronics', name: 'Электроника', icon: '📱', sortOrder: 1 },
-  { id: 'cat_auto', name: 'Авто и Запчасти', icon: '🚗', sortOrder: 2 },
-  { id: 'cat_home', name: 'Дом и Сад', icon: '🏠', sortOrder: 3 },
-  { id: 'cat_fashion', name: 'Одежда и Обувь', icon: '👕', sortOrder: 4 },
-  { id: 'cat_services', name: 'Услуги', icon: '🛠️', sortOrder: 5 }
+  { id: 'cat_services', name: 'Веб-разработка & Услуги', icon: '💻', sortOrder: 1 },
+  { id: 'cat_electronics', name: 'Электроника', icon: '📱', sortOrder: 2 },
+  { id: 'cat_auto', name: 'Авто и Запчасти', icon: '🚗', sortOrder: 3 },
+  { id: 'cat_home', name: 'Дом и Сад', icon: '🏠', sortOrder: 4 }
 ];
 
-// Initial Demo Items (Empty by default)
-const DEMO_ITEMS = [];
+// Initial Service Items with Pre-Imported Portfolio Projects from vortexaiweb/portfolio
+const DEMO_ITEMS = [
+  {
+    id: 'serv_web_dev',
+    title: 'Разработка сайтов и веб-сервисов под ключ',
+    price: 500,
+    currency: 'BYN',
+    categoryId: 'cat_services',
+    description: 'Создание современных реактивных сайтов, лендингов, веб-приложений и интернет-каталогов под ключ. Высокая скорость загрузки, адаптация под мобильные устройства, интеграция с Telegram и внешними API.',
+    images: ['https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800'],
+    status: 'active',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    portfolio: [
+      {
+        id: 'port_d2c_site',
+        title: 'Персональный сайт d2c-site',
+        liveUrl: 'https://vortexaiweb.github.io/d2c-site',
+        sourceUrl: 'https://github.com/vortexaiweb/d2c-site',
+        image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800',
+        description: 'Персональный сайт разработки услуг и веб-приложений.'
+      },
+      {
+        id: 'port_proj_1',
+        title: 'Многостраничный сайт услуг (Проект #1)',
+        liveUrl: 'https://vortexaiweb.github.io/portfolio/1',
+        sourceUrl: 'https://github.com/vortexaiweb/portfolio/tree/main/1',
+        image: 'https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=800',
+        description: 'Адаптивный сайт услуг и контактов.'
+      },
+      {
+        id: 'port_proj_2',
+        title: 'Лендинг веб-студии (Проект #2)',
+        liveUrl: 'https://vortexaiweb.github.io/portfolio/2',
+        sourceUrl: 'https://github.com/vortexaiweb/portfolio/tree/main/2',
+        image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800',
+        description: 'Интерактивный промо-лендинг веб-студии.'
+      }
+    ]
+  },
+  {
+    id: 'serv_app_dev',
+    title: 'Разработка приложений-каталогов и SPA',
+    price: 700,
+    currency: 'BYN',
+    categoryId: 'cat_services',
+    description: 'Разработка сложных интерактивных каталогов техники, витрин товаров и динамических Single Page Applications на React + Vite с локальным или облачным хранилищем.',
+    images: ['https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=800'],
+    status: 'active',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    portfolio: [
+      {
+        id: 'port_iphone_app',
+        title: 'iPhone Showcase App',
+        liveUrl: 'https://vortexaiweb.github.io/portfolio/iphone-main',
+        sourceUrl: 'https://github.com/vortexaiweb/portfolio/tree/main/iphone-main',
+        image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800',
+        description: 'Интерактивное приложение-каталог техники Apple.'
+      }
+    ]
+  }
+];
 
-// LocalStorage Helper for fallback mode when Firebase credentials are not yet entered
+// LocalStorage Helper for fallback mode
 const getLocalData = (key, defaultVal) => {
   try {
     const data = localStorage.getItem(`tkeep_${key}`);
@@ -114,10 +173,11 @@ export const seedInitialData = async () => {
 
   // Local Storage Seeding
   try {
+    const existingItems = getLocalData('items', []);
     if (!localStorage.getItem('tkeep_categories')) {
       setLocalData('categories', DEMO_CATEGORIES);
     }
-    if (!localStorage.getItem('tkeep_items')) {
+    if (!localStorage.getItem('tkeep_items') || existingItems.length === 0) {
       setLocalData('items', DEMO_ITEMS);
     }
   } catch (e) {
@@ -154,7 +214,12 @@ export const subscribeItems = (callback, isAdmin = false) => {
     
     return onSnapshot(q, (snapshot) => {
       const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      callback(items);
+      if (items.length > 0) {
+        callback(items);
+      } else {
+        const local = getLocalData('items', DEMO_ITEMS);
+        callback(isAdmin ? local : local.filter(i => i.status === 'active'));
+      }
     }, (err) => {
       console.warn("Firestore items listener fallback to local:", err);
       const local = getLocalData('items', DEMO_ITEMS);
@@ -238,11 +303,11 @@ export const addProductItem = async (itemData) => {
     description: itemData.description || '',
     price: Number(itemData.price) || 0,
     currency: itemData.currency || 'BYN',
-    categoryId: itemData.categoryId || 'cat_electronics',
+    categoryId: itemData.categoryId || 'cat_services',
     images: itemData.images && itemData.images.length > 0 ? itemData.images : ['https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=800'],
     sourceUrl: itemData.sourceUrl || '',
     status: itemData.status || 'active',
-    location: itemData.location || 'Минск',
+    portfolio: Array.isArray(itemData.portfolio) ? itemData.portfolio : [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString()
   };
@@ -314,14 +379,12 @@ export const authenticateAdmin = async (login, password) => {
     throw new Error('Неверный логин или пароль администратора!');
   }
 
-  // Firebase Auth integration
   const adminEmail = `${login}@tkeep.by`;
 
   if (auth) {
     try {
       await signInWithEmailAndPassword(auth, adminEmail, password);
     } catch (authError) {
-      // If user doesn't exist yet, attempt to create it
       if (authError.code === 'auth/user-not-found' || authError.code === 'auth/invalid-credential') {
         try {
           await createUserWithEmailAndPassword(auth, adminEmail, password);
@@ -332,7 +395,6 @@ export const authenticateAdmin = async (login, password) => {
     }
   }
 
-  // Save session state
   localStorage.setItem('tkeep_admin_authenticated', 'true');
   localStorage.setItem('tkeep_admin_user', JSON.stringify({ username: 'd2c', role: 'admin', email: adminEmail }));
   return { username: 'd2c', role: 'admin', email: adminEmail };
