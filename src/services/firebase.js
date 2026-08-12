@@ -60,64 +60,6 @@ const DEMO_CATEGORIES = [
 
 // Initial Service Items with Pre-Imported Portfolio Projects from vortexaiweb/portfolio
 const DEMO_ITEMS = [
-  {
-    id: 'serv_web_dev',
-    title: 'Разработка сайтов и веб-сервисов под ключ',
-    price: 500,
-    currency: 'BYN',
-    categoryId: 'cat_services',
-    description: 'Создание современных реактивных сайтов, лендингов, веб-приложений и интернет-каталогов под ключ. Высокая скорость загрузки, адаптация под мобильные устройства, интеграция с Telegram и внешними API.',
-    images: ['https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800'],
-    status: 'active',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    portfolio: [
-      {
-        id: 'port_d2c_site',
-        title: 'Персональный сайт d2c-site',
-        liveUrl: 'https://vortexaiweb.github.io/d2c-site',
-        sourceUrl: 'https://github.com/vortexaiweb/d2c-site',
-        image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800',
-        description: 'Персональный сайт разработки услуг и веб-приложений.'
-      },
-      {
-        id: 'port_proj_1',
-        title: 'Многостраничный сайт услуг (Проект #1)',
-        liveUrl: 'https://vortexaiweb.github.io/portfolio/1',
-        sourceUrl: 'https://github.com/vortexaiweb/portfolio/tree/main/1',
-        image: 'https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=800',
-        description: 'Адаптивный сайт услуг и контактов.'
-      },
-      {
-        id: 'port_proj_2',
-        title: 'Лендинг веб-студии (Проект #2)',
-        liveUrl: 'https://vortexaiweb.github.io/portfolio/2',
-        sourceUrl: 'https://github.com/vortexaiweb/portfolio/tree/main/2',
-        image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800',
-        description: 'Интерактивный промо-лендинг веб-студии.'
-      }
-    ]
-  },
-  {
-    id: 'serv_app_dev',
-    title: 'Разработка приложений-каталогов и SPA',
-    price: 700,
-    currency: 'BYN',
-    categoryId: 'cat_services',
-    description: 'Разработка сложных интерактивных каталогов техники, витрин товаров и динамических Single Page Applications на React + Vite с локальным или облачным хранилищем.',
-    images: ['https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=800'],
-    status: 'active',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    portfolio: [
-      {
-        id: 'port_iphone_app',
-        title: 'iPhone Showcase App',
-        liveUrl: 'https://vortexaiweb.github.io/portfolio/iphone-main',
-        sourceUrl: 'https://github.com/vortexaiweb/portfolio/tree/main/iphone-main',
-        image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=800',
-        description: 'Интерактивное приложение-каталог техники Apple.'
-      }
     ]
   }
 ];
