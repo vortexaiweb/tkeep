@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: '/', // Custom domain tkeep.online root path
+  base: './',
   build: {
     outDir: 'dist',
     sourcemap: false
