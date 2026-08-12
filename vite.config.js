@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: './', // Ensures assets resolve correctly on GitHub Pages subpaths
+  base: '/', // Custom domain tkeep.online root path
   build: {
     outDir: 'dist',
     sourcemap: false
