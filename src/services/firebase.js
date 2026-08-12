@@ -60,74 +60,8 @@ const DEMO_CATEGORIES = [
   { id: 'cat_services', name: 'Услуги', icon: '🛠️', sortOrder: 5 }
 ];
 
-// Demo Items for Initial Setup
-const DEMO_ITEMS = [
-  {
-    id: 'demo_1',
-    title: 'Apple iPhone 15 Pro 128GB Titanium',
-    description: 'Идеальное состояние, полный комплект, оригинальный чехол MagSafe в подарок. Состояние аккумулятора 98%. Официальная гарантия.',
-    price: 3200,
-    currency: 'BYN',
-    categoryId: 'cat_electronics',
-    images: [
-      'https://img.kufar.by/v1/list_thumbs_2x/01/0147983419.jpg',
-      'https://img.kufar.by/v1/list_thumbs_2x/01/0147983420.jpg'
-    ],
-    sourceUrl: 'https://www.kufar.by/item/214983214',
-    status: 'active',
-    location: 'Минск',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  },
-  {
-    id: 'demo_2',
-    title: 'Ноутбук ASUS ROG Strix G16 i7 / RTX 4060',
-    description: 'Мощный игровой ноутбук. Экран 165 Гц, Intel Core i7-13650HX, 16 ГБ RAM, 1 ТБ SSD. Отличное состояние, коробочный комплект.',
-    price: 4600,
-    currency: 'BYN',
-    categoryId: 'cat_electronics',
-    images: [
-      'https://img.kufar.by/v1/list_thumbs_2x/01/0147812984.jpg'
-    ],
-    sourceUrl: 'https://www.kufar.by/item/214981298',
-    status: 'active',
-    location: 'Минск',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  },
-  {
-    id: 'demo_3',
-    title: 'Комплект оригинальных дисков R18 BMW',
-    description: 'Литые диски R18 в стиле 790 M. Подходят на G20, G30. Ровные, без сварки и трещин. Резина в подарок.',
-    price: 1850,
-    currency: 'BYN',
-    categoryId: 'cat_auto',
-    images: [
-      'https://img.kufar.by/v1/list_thumbs_2x/01/0147910283.jpg'
-    ],
-    sourceUrl: 'https://www.kufar.by/item/214910283',
-    status: 'active',
-    location: 'Гродно',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  },
-  {
-    id: 'demo_4',
-    title: 'Диван угловой раскладной Scandinavian Grey',
-    description: 'Современный стильный диван с механизмом еврокнижка и вместительным бельевым ящиком. Ткань антикоготь.',
-    price: 1250,
-    currency: 'BYN',
-    categoryId: 'cat_home',
-    images: [
-      'https://img.kufar.by/v1/list_thumbs_2x/01/0147551982.jpg'
-    ],
-    sourceUrl: '',
-    status: 'active',
-    location: 'Брест',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
-  }
-];
+// Initial Demo Items (Empty by default)
+const DEMO_ITEMS = [];
 
 // LocalStorage Helper for fallback mode when Firebase credentials are not yet entered
 const getLocalData = (key, defaultVal) => {
