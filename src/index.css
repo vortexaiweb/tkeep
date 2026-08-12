@@ -2,11 +2,11 @@
 
 @layer base {
   :root {
-    --bg-main: #121319;
-    --bg-card: rgba(26, 28, 38, 0.75);
-    --bg-glass: rgba(32, 35, 48, 0.6);
+    --bg-main: #0B0C10;
+    --bg-card: rgba(22, 24, 34, 0.75);
+    --bg-glass: rgba(26, 29, 42, 0.65);
     --accent: #FF758F;
-    --accent-glow: rgba(255, 117, 143, 0.28);
+    --accent-glow: rgba(255, 117, 143, 0.35);
     --accent-hover: #FF5277;
     --text-primary: #F9FAFB;
     --text-secondary: #9CA3AF;
@@ -14,7 +14,12 @@
   }
 
   body {
-    background-color: #121319;
+    background-color: #0B0C10;
+    background-image: 
+      radial-gradient(at 15% 15%, rgba(255, 117, 143, 0.07) 0px, transparent 50%),
+      radial-gradient(at 85% 85%, rgba(139, 92, 246, 0.06) 0px, transparent 50%),
+      radial-gradient(at 50% 50%, rgba(20, 24, 38, 0.5) 0px, transparent 100%);
+    background-attachment: fixed;
     color: #f9fafb;
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     min-height: 100vh;
@@ -22,72 +27,96 @@
   }
 }
 
-/* Custom Utilities & Animations */
+/* Custom Utilities & Glassmorphism inspired by wibe.site */
 .glass-panel {
-  background: rgba(24, 26, 36, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(18, 20, 30, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
 .glass-card {
-  background: rgba(28, 30, 42, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, rgba(26, 29, 42, 0.85) 0%, rgba(18, 20, 30, 0.75) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 117, 143, 0.35);
-  box-shadow: 0 12px 30px -10px rgba(255, 117, 143, 0.2);
+  transform: translateY(-5px) scale(1.01);
+  border-color: rgba(255, 117, 143, 0.4);
+  box-shadow: 0 20px 40px -15px rgba(255, 117, 143, 0.22), 0 0 1px 1px rgba(255, 117, 143, 0.1);
+}
+
+.glass-button {
+  background: rgba(30, 33, 48, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.25s ease;
+}
+
+.glass-button:hover {
+  background: rgba(40, 44, 64, 0.85);
+  border-color: rgba(255, 117, 143, 0.3);
 }
 
 .glow-peach {
-  box-shadow: 0 0 20px rgba(255, 117, 143, 0.35);
+  box-shadow: 0 0 25px rgba(255, 117, 143, 0.35);
 }
 
 .glow-text {
-  text-shadow: 0 0 12px rgba(255, 117, 143, 0.4);
+  text-shadow: 0 0 16px rgba(255, 117, 143, 0.45);
 }
 
-/* Scrollbar customization */
+.badge-brand {
+  background: linear-gradient(135deg, rgba(255, 117, 143, 0.15) 0%, rgba(244, 63, 94, 0.25) 100%);
+  border: 1px solid rgba(255, 117, 143, 0.3);
+  color: #FF758F;
+}
+
+/* Keyframe Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #121319;
+  background: #0B0C10;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #272a38;
+  background: #232736;
   border-radius: 4px;
+  border: 2px solid #0B0C10;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #373b4e;
+  background: #FF758F;
 }
 
-/* Skeleton Loading Shimmer */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.animate-skeleton {
-  background: linear-gradient(90deg, #1d202c 25%, #2c3042 37%, #1d202c 63%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-/* Hide scrollbar for horizontal categories */
+/* Hide scrollbar for category tabs */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

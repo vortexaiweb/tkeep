@@ -1,61 +1,52 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  subscribeCategories, 
-  subscribeItems, 
-  seedInitialData,
+import { Navbar } from './components/Navbar';
+import { CategoryBar } from './components/CategoryBar';
+import { ProductGrid } from './components/ProductGrid';
+import { ProductDetailModal } from './components/ProductDetailModal';
+import { AdminDashboard } from './components/admin/AdminDashboard';
+import { Footer } from './components/Footer';
+import { useAuth } from './context/AuthContext';
+import {
+  subscribeCategories,
+  subscribeItems,
   addProductItem,
   updateProductItem,
   deleteProductItem,
   toggleProductStatus,
   addCategoryItem,
   updateCategoryItem,
-  deleteCategoryItem 
+  deleteCategoryItem,
+  seedInitialData
 } from './services/firebase';
-import { useAuth } from './context/AuthContext';
-import { Navbar } from './components/Navbar';
-import { CategoryBar } from './components/CategoryBar';
-import { ProductGrid } from './components/ProductGrid';
-import { ProductDetailModal } from './components/ProductDetailModal';
-import { Footer } from './components/Footer';
-import { AdminLoginModal } from './components/AdminLoginModal';
-import { AdminDashboard } from './components/admin/AdminDashboard';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ShieldCheck, Zap, MessageCircle } from 'lucide-react';
 
-export function App() {
-  const { isAdmin } = useAuth();
-
+export const App = () => {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Filter States
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-
-  // Selected item modal state
   const [selectedItem, setSelectedItem] = useState(null);
+  const [currentView, setCurrentView] = useState('catalog'); // 'catalog' | 'admin'
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Admin login modal state & view state ('catalog' | 'admin')
-  const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
-  const [currentView, setCurrentView] = useState('catalog');
+  const { isAdmin } = useAuth();
 
-  // Initial Seed & Real-time Listeners
+  // Initial Data Fetch & Realtime Listeners
   useEffect(() => {
     seedInitialData();
 
-    // Fallback timer to prevent getting stuck in loading state forever
-    const loadingTimer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2500);
-
-    const unsubCat = subscribeCategories((cats) => {
-      setCategories(Array.isArray(cats) ? cats : []);
+    const unsubCat = subscribeCategories((data) => {
+      setCategories(data);
     });
 
-    const unsubItems = subscribeItems((itemList) => {
-      setItems(Array.isArray(itemList) ? itemList : []);
+    const unsubItems = subscribeItems((data) => {
+      setItems(data);
       setIsLoading(false);
     }, isAdmin);
+
+    const loadingTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
 
     return () => {
       clearTimeout(loadingTimer);
@@ -64,7 +55,7 @@ export function App() {
     };
   }, [isAdmin]);
 
-  // Direct Address / Hash Routing (#/admin or #/login opens hidden admin entry)
+  // Hash Routing (#/admin or #/item/:id)
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash;
@@ -76,11 +67,7 @@ export function App() {
           setCurrentView('catalog');
         }
       } else if (hash === '#/admin' || hash === '#/login') {
-        if (isAdmin) {
-          setCurrentView('admin');
-        } else {
-          setIsAdminLoginOpen(true);
-        }
+        setCurrentView('admin');
       } else if (hash === '#/' || hash === '') {
         setCurrentView('catalog');
       }
@@ -91,7 +78,7 @@ export function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, [items, isAdmin]);
 
-  // Categories Lookup Map
+  // Categories Map
   const categoriesMap = useMemo(() => {
     const map = {};
     (categories || []).forEach((cat) => {
@@ -111,22 +98,23 @@ export function App() {
       }
     });
     (items || []).forEach((item) => {
-      if (item && counts[item.categoryId] !== undefined) {
-        counts[item.categoryId] += 1;
+      if (item && item.categoryId && counts[item.categoryId] !== undefined) {
+        counts[item.categoryId] = (counts[item.categoryId] || 0) + 1;
       }
     });
     return counts;
   }, [categories, items]);
 
-  // Filtered Items for Catalog View
+  // Filter items by selected category and search query
   const filteredItems = useMemo(() => {
     return (items || []).filter((item) => {
       if (!item) return false;
       const matchesCat = selectedCategory === 'all' || item.categoryId === selectedCategory;
-      const itemTitle = (item.title || '').toLowerCase();
-      const itemDesc = (item.description || '').toLowerCase();
-      const query = searchQuery.toLowerCase().trim();
-      const matchesSearch = !query || itemTitle.includes(query) || itemDesc.includes(query);
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
+        (item.title && item.title.toLowerCase().includes(q)) ||
+        (item.description && item.description.toLowerCase().includes(q));
       return matchesCat && matchesSearch;
     });
   }, [items, selectedCategory, searchQuery]);
@@ -179,15 +167,8 @@ export function App() {
     }
   };
 
-  const handleCloseAdminLoginModal = () => {
-    setIsAdminLoginOpen(false);
-    if (!isAdmin && (window.location.hash === '#/admin' || window.location.hash === '#/login')) {
-      window.location.hash = '#/';
-    }
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#121319] text-gray-100 selection:bg-[#FF758F] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#0B0C10] text-gray-100 selection:bg-[#FF758F] selection:text-white">
       
       {/* Top Navbar */}
       <Navbar
@@ -204,7 +185,7 @@ export function App() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
         
-        {currentView === 'admin' && isAdmin ? (
+        {currentView === 'admin' ? (
           <AdminDashboard
             items={items}
             categories={categories}
@@ -223,23 +204,44 @@ export function App() {
             onDeleteCategory={handleDeleteCategory}
           />
         ) : (
-          <div className="py-6">
+          <div className="py-8">
             
-            {/* Catalog Hero Banner */}
-            <div className="relative glass-panel rounded-3xl p-8 mb-6 overflow-hidden border border-gray-800 bg-gradient-to-r from-gray-900 via-[#181a24] to-[#2a1b24]">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-[#FF758F]/10 rounded-full blur-3xl -z-10 pointer-events-none" />
+            {/* Catalog Premium Hero Banner (wibe style) */}
+            <div className="relative glass-panel rounded-3xl p-8 sm:p-10 mb-8 overflow-hidden border border-gray-800/80 bg-gradient-to-br from-gray-950 via-[#131520] to-[#251520]">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-[#FF758F]/15 rounded-full blur-3xl -z-10 pointer-events-none" />
+              <div className="absolute -bottom-10 left-1/3 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
               
-              <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FF758F]/10 border border-[#FF758F]/25 text-[#FF758F] text-xs font-bold mb-4 shadow-sm">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Официальный каталог товаров и услуг</span>
+              <div className="max-w-3xl">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full badge-brand text-xs font-extrabold mb-4 shadow-lg shadow-[#FF758F]/15">
+                  <Sparkles className="w-4 h-4 text-[#FF758F] animate-pulse-glow" />
+                  <span>Премиальная витрина услуг и проектов</span>
                 </div>
-                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
-                  Каталог объявлений <span className="bg-gradient-to-r from-[#FF758F] via-[#FF8A9E] to-rose-400 bg-clip-text text-transparent">tkeep</span>
+
+                <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white mb-4 leading-tight">
+                  Интерактивный каталог <br />
+                  <span className="bg-gradient-to-r from-white via-rose-200 to-[#FF758F] bg-clip-text text-transparent">
+                    tkeep.online
+                  </span>
                 </h1>
-                <p className="text-sm text-gray-300 leading-relaxed">
-                  Ищите нужные товары, используйте фильтры по категориям и напрямую связывайтесь с нами в Telegram для покупки или вопросов.
+
+                <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium mb-6">
+                  Выбирайте подходящие услуги, просматривайте прикрепленные живые примеры работ в портфолио и напрямую связывайтесь с нами в Telegram для быстрого оформления заказa.
                 </p>
+
+                <div className="flex flex-wrap items-center gap-3 text-xs font-bold text-gray-300">
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-900/80 border border-gray-800 text-gray-300">
+                    <Zap className="w-3.5 h-3.5 text-[#FF758F]" />
+                    <span>Быстрый запуск</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-900/80 border border-gray-800 text-gray-300">
+                    <ShieldCheck className="w-3.5 h-3.5 text-rose-400" />
+                    <span>Проверенное портфолио</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-900/80 border border-gray-800 text-gray-300">
+                    <MessageCircle className="w-3.5 h-3.5 text-sky-400" />
+                    <span>Прямая связь в Telegram</span>
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -268,11 +270,13 @@ export function App() {
               }}
               isAdmin={isAdmin}
             />
-
           </div>
         )}
 
       </main>
+
+      {/* Footer */}
+      <Footer />
 
       {/* Product Detail Modal */}
       {selectedItem && (
@@ -283,21 +287,8 @@ export function App() {
         />
       )}
 
-      {/* Admin Login Modal (Triggered strictly via URL hash #/admin or #/login) */}
-      <AdminLoginModal
-        isOpen={isAdminLoginOpen}
-        onClose={handleCloseAdminLoginModal}
-        onSuccess={() => {
-          setCurrentView('admin');
-          window.location.hash = '#/admin';
-        }}
-      />
-
-      {/* Persistent Footer with Prominent Telegram Link */}
-      <Footer />
-
     </div>
   );
-}
+};
 
 export default App;
