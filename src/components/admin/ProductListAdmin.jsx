@@ -135,7 +135,7 @@ export const ProductListAdmin = ({ items, categoriesMap, onEdit, onDelete, onTog
 
                       {/* Price */}
                       <td className="py-3 px-4 whitespace-nowrap font-bold text-[#FF758F]">
-                        {Number(item.price).toLocaleString('ru-RU')} {item.currency || 'BYN'}
+                        от {Number(item.price).toLocaleString('ru-RU')} {item.currency || 'BYN'}
                       </td>
 
                       {/* Status Toggle Switch */}

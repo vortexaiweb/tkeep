@@ -88,8 +88,10 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
         {/* Bottom Details */}
         <div className="flex items-end justify-between gap-2 pt-3 border-t border-gray-800/60">
           <div>
-            <div className="text-xl font-extrabold text-[#FF758F] tracking-tight">
-              {Number(item.price).toLocaleString('ru-RU')} <span className="text-sm font-semibold text-rose-300">{item.currency || 'BYN'}</span>
+            <div className="text-xl font-extrabold text-[#FF758F] tracking-tight flex items-baseline gap-1">
+              <span className="text-xs text-gray-400 font-normal">от</span>
+              <span>{Number(item.price).toLocaleString('ru-RU')}</span>
+              <span className="text-sm font-semibold text-rose-300">{item.currency || 'BYN'}</span>
             </div>
             {item.location && (
               <div className="flex items-center gap-1 text-[11px] text-gray-400 mt-0.5">

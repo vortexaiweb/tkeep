@@ -135,6 +135,7 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
 
                 {/* Price Display */}
                 <div className="flex items-baseline gap-2 py-2">
+                  <span className="text-base text-gray-400 font-medium">от</span>
                   <span className="text-3xl sm:text-4xl font-extrabold text-[#FF758F] tracking-tight">
                     {Number(item.price).toLocaleString('ru-RU')}
                   </span>
