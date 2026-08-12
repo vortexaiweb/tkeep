@@ -2,20 +2,17 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <title>tkeep — Перенаправление...</title>
-    <script>
-      // Single Page Apps for GitHub Pages SPA Fallback
-      var pathSegmentsToKeep = 0;
-      var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/') +
-        (l.search ? '&' + l.search.slice(1) : '') +
-        l.hash
-      );
-    </script>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FF758F'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tkeep — Автоматизированный каталог товаров и услуг</title>
+    <meta name="description" content="Каталог товаров tkeep с импортом объявлений с Kufar.by. Поиск, категории, актуальные цены и быстрая связь в Telegram." />
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   </head>
-  <body>
+  <body class="bg-[#121319] text-gray-100 antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
