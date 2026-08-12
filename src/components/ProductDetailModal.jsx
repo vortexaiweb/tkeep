@@ -1,36 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { X, ExternalLink, Share2, Calendar, Send, ChevronLeft, ChevronRight, Check, FolderGit2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, ExternalLink, Calendar, Send, ChevronLeft, ChevronRight, Share2, FolderGit2, ArrowUpRight } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 
 export const ProductDetailModal = ({ item, category, onClose }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [copied, setCopied] = useState(false);
   const { showToast } = useToast();
 
-  const images = item.images && item.images.length > 0
-    ? item.images
-    : ['https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=800'];
+  if (!item) return null;
 
-  // Handle ESC key press
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
-
-  const handleShare = () => {
-    const shareUrl = `${window.location.origin}${window.location.pathname}#/item/${item.id}`;
-    if (navigator?.clipboard?.writeText) {
-      navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      showToast('Прямая ссылка на товар скопирована!', 'success');
-      setTimeout(() => setCopied(false), 3000);
-    } else {
-      showToast(`Ссылка: ${shareUrl}`, 'info');
-    }
-  };
+  const images = item.images && item.images.length > 0 ? item.images : ['https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=800'];
 
   const nextImage = () => {
     setSelectedImageIndex((prev) => (prev + 1) % images.length);
@@ -40,45 +18,57 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
     setSelectedImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  const handleShare = () => {
+    const shareUrl = `${window.location.origin}${window.location.pathname}#/item/${item.id}`;
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(shareUrl);
+      showToast('Ссылка на предложение скопирована в буфер обмена!', 'success');
+    } else {
+      showToast(`Ссылка: ${shareUrl}`, 'info');
+    }
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fade-in overflow-y-auto">
-      {/* Modal Container */}
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-2xl animate-fade-in overflow-y-auto"
+      onClick={onClose}
+    >
       <div 
-        className="relative w-full max-w-4xl glass-panel rounded-3xl overflow-hidden border border-gray-700/60 shadow-2xl my-auto max-h-[90vh] flex flex-col"
+        className="relative w-full max-w-4xl glass-panel rounded-3xl overflow-hidden border border-gray-800/80 shadow-2xl my-auto max-h-[92vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Modal Header Bar */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800 bg-gray-900/90">
-          <div className="flex items-center gap-2">
+        {/* Modal Header */}
+        <div className="flex items-center justify-between p-5 border-b border-gray-800/80 bg-gray-950/60 backdrop-blur-md">
+          <div className="flex items-center gap-2 flex-wrap">
             {category && (
-              <span className="px-3 py-1 rounded-xl text-xs font-semibold bg-[#FF758F]/10 text-[#FF758F] border border-[#FF758F]/25">
+              <span className="px-3 py-1 rounded-xl text-xs font-extrabold bg-[#FF758F]/10 text-[#FF758F] border border-[#FF758F]/30">
                 {category.icon} {category.name}
               </span>
             )}
             {item.sourceUrl && (
-              <span className="px-2.5 py-1 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
-                <ExternalLink className="w-3.5 h-3.5" /> Импорт Kufar
+              <span className="px-2.5 py-1 rounded-xl text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
+                <ExternalLink className="w-3.5 h-3.5" /> Kufar
               </span>
             )}
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-800 transition-all"
+            className="p-2 rounded-2xl text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-800 transition-all border border-gray-700/50"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-6 overflow-y-auto space-y-6">
+        <div className="p-6 sm:p-8 overflow-y-auto space-y-6">
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             {/* Gallery Section */}
             <div className="flex flex-col gap-4">
               {/* Main Image Display */}
-              <div className="relative aspect-[4/3] w-full rounded-2xl bg-gray-950 overflow-hidden border border-gray-800">
+              <div className="relative aspect-[4/3] w-full rounded-3xl bg-gray-950 overflow-hidden border border-gray-800/80 shadow-inner">
                 <img
                   src={images[selectedImageIndex]}
                   alt={item.title}
@@ -92,13 +82,13 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
                   <>
                     <button
                       onClick={prevImage}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-gray-900/80 hover:bg-gray-900 text-white backdrop-blur-md transition-all border border-gray-700/50"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-2xl bg-gray-900/80 hover:bg-gray-900 text-white backdrop-blur-md transition-all border border-gray-700/50"
                     >
                       <ChevronLeft className="w-5 h-5" />
                     </button>
                     <button
                       onClick={nextImage}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-gray-900/80 hover:bg-gray-900 text-white backdrop-blur-md transition-all border border-gray-700/50"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-2xl bg-gray-900/80 hover:bg-gray-900 text-white backdrop-blur-md transition-all border border-gray-700/50"
                     >
                       <ChevronRight className="w-5 h-5" />
                     </button>
@@ -108,14 +98,14 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
 
               {/* Thumbnails list */}
               {images.length > 1 && (
-                <div className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
+                <div className="flex items-center gap-2.5 overflow-x-auto pb-2 no-scrollbar">
                   {images.map((imgUrl, idx) => (
                     <button
                       key={idx}
                       onClick={() => setSelectedImageIndex(idx)}
-                      className={`relative w-16 h-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
+                      className={`relative w-16 h-16 rounded-2xl overflow-hidden shrink-0 border-2 transition-all ${
                         selectedImageIndex === idx
-                          ? 'border-[#FF758F] scale-105 shadow-md shadow-[#FF758F]/20'
+                          ? 'border-[#FF758F] scale-105 shadow-md shadow-[#FF758F]/25'
                           : 'border-gray-800 opacity-60 hover:opacity-100'
                       }`}
                     >
@@ -129,14 +119,14 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
             {/* Product Meta & Actions */}
             <div className="flex flex-col justify-between gap-6">
               <div className="space-y-4">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-100 tracking-tight leading-snug">
+                <h1 className="text-2xl sm:text-3xl font-black text-gray-100 tracking-tight leading-snug">
                   {item.title}
                 </h1>
 
                 {/* Price Display */}
                 <div className="flex items-baseline gap-2 py-2">
-                  <span className="text-base text-gray-400 font-medium">от</span>
-                  <span className="text-3xl sm:text-4xl font-extrabold text-[#FF758F] tracking-tight">
+                  <span className="text-sm text-gray-400 font-semibold">от</span>
+                  <span className="text-3xl sm:text-4xl font-black text-[#FF758F] tracking-tight">
                     {Number(item.price).toLocaleString('ru-RU')}
                   </span>
                   <span className="text-lg font-bold text-rose-300">
@@ -146,9 +136,9 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
 
                 {/* Date Metadata */}
                 {item.createdAt && (
-                  <div className="flex items-center gap-4 text-xs text-gray-400 py-2 border-y border-gray-800">
-                    <div className="flex items-center gap-1.5">
-                      <Calendar className="w-4 h-4 text-gray-500" />
+                  <div className="flex items-center gap-4 text-xs text-gray-400 py-2 border-y border-gray-800/80">
+                    <div className="flex items-center gap-1.5 font-medium">
+                      <Calendar className="w-4 h-4 text-[#FF758F]" />
                       <span>{new Date(item.createdAt).toLocaleDateString('ru-RU')}</span>
                     </div>
                   </div>
@@ -156,24 +146,24 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
 
                 {/* Description */}
                 <div>
-                  <h4 className="text-xs uppercase font-bold tracking-wider text-gray-400 mb-2">Описание</h4>
-                  <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-line bg-gray-900/60 p-4 rounded-2xl border border-gray-800 max-h-48 overflow-y-auto">
+                  <h4 className="text-[11px] uppercase font-extrabold tracking-wider text-gray-400 mb-2">Описание услуги</h4>
+                  <p className="text-xs sm:text-sm text-gray-300 leading-relaxed whitespace-pre-line bg-gray-950/80 p-4 rounded-2xl border border-gray-800/80 max-h-48 overflow-y-auto">
                     {item.description || 'Описание не указано.'}
                   </p>
                 </div>
 
                 {/* Attached Service Portfolio Gallery */}
                 {Array.isArray(item.portfolio) && item.portfolio.length > 0 && (
-                  <div className="pt-4 border-t border-gray-800 space-y-3">
-                    <h4 className="text-xs uppercase font-bold tracking-wider text-[#FF758F] flex items-center gap-2">
+                  <div className="pt-4 border-t border-gray-800/80 space-y-3">
+                    <h4 className="text-[11px] uppercase font-black tracking-wider text-[#FF758F] flex items-center gap-2">
                       <FolderGit2 className="w-4 h-4" />
-                      <span>Портфолио выполненных работ ({item.portfolio.length})</span>
+                      <span>Выполненные проекты в Портфолио ({item.portfolio.length})</span>
                     </h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-1">
                       {item.portfolio.map((proj, idx) => (
-                        <div key={idx} className="glass-card p-3 rounded-xl border border-gray-800 flex flex-col justify-between gap-2 bg-gray-900/80">
+                        <div key={idx} className="glass-card p-3.5 rounded-2xl border border-gray-800 flex flex-col justify-between gap-2.5 bg-gray-950/80">
                           {proj.image && (
-                            <div className="aspect-video w-full rounded-lg bg-gray-950 overflow-hidden border border-gray-800">
+                            <div className="aspect-video w-full rounded-xl bg-gray-900 overflow-hidden border border-gray-800">
                               <img src={proj.image} alt={proj.title} className="w-full h-full object-cover" />
                             </div>
                           )}
@@ -188,10 +178,10 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
                               href={proj.liveUrl || proj.sourceUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#FF758F] hover:underline pt-1"
+                              className="inline-flex items-center justify-between text-xs font-bold text-[#FF758F] bg-[#FF758F]/10 hover:bg-[#FF758F]/20 px-3 py-1.5 rounded-xl border border-[#FF758F]/30 transition-all mt-1"
                             >
                               <span>Посмотреть демо</span>
-                              <ExternalLink className="w-3 h-3" />
+                              <ArrowUpRight className="w-3.5 h-3.5" />
                             </a>
                           )}
                         </div>
@@ -209,32 +199,30 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
                   href="https://t.me/tkeepk"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-3 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-400 hover:to-pink-400 text-white font-bold text-base transition-all shadow-lg shadow-rose-500/25 group"
+                  className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-400 hover:to-pink-400 text-white font-extrabold text-sm transition-all shadow-xl shadow-rose-500/25 group"
                 >
                   <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   <span>Связаться в Telegram (t.me/tkeepk)</span>
                 </a>
 
                 <div className="flex items-center gap-3">
-                  {/* Share button */}
                   <button
                     onClick={handleShare}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold text-sm transition-all border border-gray-700/60"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-gray-900 hover:bg-gray-800 text-gray-300 font-bold text-xs border border-gray-800 transition-all"
                   >
-                    {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-emerald-400" />}
-                    <span>{copied ? 'Ссылка скопирована' : 'Поделиться'}</span>
+                    <Share2 className="w-4 h-4 text-[#FF758F]" />
+                    <span>Поделиться ссылкой</span>
                   </button>
 
-                  {/* Kufar Original Link */}
                   {item.sourceUrl && (
                     <a
                       href={item.sourceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 px-4 py-3 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-semibold text-sm transition-all border border-amber-500/30"
+                      className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-bold text-xs border border-amber-500/30 transition-all"
                     >
                       <ExternalLink className="w-4 h-4" />
-                      <span>На Kufar.by</span>
+                      <span>Kufar</span>
                     </a>
                   )}
                 </div>
