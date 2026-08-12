@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ExternalLink, Share2, Calendar, Send, ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { X, ExternalLink, Share2, Calendar, Send, ChevronLeft, ChevronRight, Check, FolderGit2 } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 
 export const ProductDetailModal = ({ item, category, onClose }) => {
@@ -161,6 +161,44 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
                     {item.description || 'Описание не указано.'}
                   </p>
                 </div>
+
+                {/* Attached Service Portfolio Gallery */}
+                {Array.isArray(item.portfolio) && item.portfolio.length > 0 && (
+                  <div className="pt-4 border-t border-gray-800 space-y-3">
+                    <h4 className="text-xs uppercase font-bold tracking-wider text-[#FF758F] flex items-center gap-2">
+                      <FolderGit2 className="w-4 h-4" />
+                      <span>Портфолио выполненных работ ({item.portfolio.length})</span>
+                    </h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-1">
+                      {item.portfolio.map((proj, idx) => (
+                        <div key={idx} className="glass-card p-3 rounded-xl border border-gray-800 flex flex-col justify-between gap-2 bg-gray-900/80">
+                          {proj.image && (
+                            <div className="aspect-video w-full rounded-lg bg-gray-950 overflow-hidden border border-gray-800">
+                              <img src={proj.image} alt={proj.title} className="w-full h-full object-cover" />
+                            </div>
+                          )}
+                          <div>
+                            <h5 className="font-bold text-gray-100 text-xs">{proj.title}</h5>
+                            {proj.description && (
+                              <p className="text-[11px] text-gray-400 mt-1 line-clamp-2">{proj.description}</p>
+                            )}
+                          </div>
+                          {(proj.liveUrl || proj.sourceUrl) && (
+                            <a
+                              href={proj.liveUrl || proj.sourceUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#FF758F] hover:underline pt-1"
+                            >
+                              <span>Посмотреть демо</span>
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Action Buttons */}

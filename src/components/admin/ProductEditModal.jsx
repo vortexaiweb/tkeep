@@ -26,9 +26,9 @@ export const ProductEditModal = ({ isOpen, onClose, onSave, item, categories }) 
         currency: item.currency || 'BYN',
         categoryId: item.categoryId || (categories[0]?.id || ''),
         status: item.status || 'active',
-        location: item.location || 'Минск',
         imagesStr: item.images ? item.images.join('\n') : '',
-        sourceUrl: item.sourceUrl || ''
+        sourceUrl: item.sourceUrl || '',
+        portfolio: item.portfolio || []
       });
     } else {
       setFormData({
@@ -38,9 +38,9 @@ export const ProductEditModal = ({ isOpen, onClose, onSave, item, categories }) 
         currency: 'BYN',
         categoryId: categories[0]?.id || '',
         status: 'active',
-        location: 'Минск',
         imagesStr: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=800',
-        sourceUrl: ''
+        sourceUrl: '',
+        portfolio: []
       });
     }
   }, [item, categories, isOpen]);
@@ -62,7 +62,8 @@ export const ProductEditModal = ({ isOpen, onClose, onSave, item, categories }) 
     const payload = {
       ...formData,
       price: Number(formData.price) || 0,
-      images: images.length > 0 ? images : ['https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=800']
+      images: images.length > 0 ? images : ['https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=800'],
+      portfolio: formData.portfolio || (item?.portfolio || [])
     };
 
     delete payload.imagesStr;

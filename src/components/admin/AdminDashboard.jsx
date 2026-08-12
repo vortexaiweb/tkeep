@@ -206,7 +206,9 @@ export const AdminDashboard = ({
 
       {activeTab === 'portfolio' && (
         <PortfolioImporter
+          items={items}
           categories={categories}
+          onUpdateProduct={onUpdateProduct}
           onImportSave={(newItem) => {
             onAddProduct(newItem);
             setActiveTab('products');

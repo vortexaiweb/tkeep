@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FolderGit2, ExternalLink, Check, Sparkles, AlertTriangle, Image as ImageIcon, Layers, Plus } from 'lucide-react';
+import { FolderGit2, ExternalLink, Check, Sparkles, AlertTriangle, Image as ImageIcon, Layers, Plus, Package } from 'lucide-react';
 import { parsePortfolioUrl } from '../../services/portfolioParser';
 import { useToast } from '../../context/ToastContext';
 
@@ -27,8 +27,9 @@ const PORTFOLIO_PRESETS = [
   }
 ];
 
-export const PortfolioImporter = ({ categories, onImportSave }) => {
+export const PortfolioImporter = ({ items = [], categories = [], onUpdateProduct, onImportSave }) => {
   const [urlInput, setUrlInput] = useState('');
+  const [targetItemId, setTargetItemId] = useState(items[0]?.id || 'new');
   const [targetCategory, setTargetCategory] = useState(categories[0]?.id || '');
   const [isParsing, setIsParsing] = useState(false);
   const [parsedData, setParsedData] = useState(null);
@@ -52,7 +53,7 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
       const result = await parsePortfolioUrl(urlToParse.trim());
       result.categoryId = targetCategory || (categories[0]?.id || '');
       setParsedData(result);
-      showToast('Данные проекта портфолио успешно загружены!', 'success');
+      showToast('Проект портфолио загружен! Проверьте данные и прикрепите к услуге.', 'success');
     } catch (err) {
       setParseError(err.message || 'Ошибка парсинга портфолио');
       showToast('Ошибка загрузки', 'error');
@@ -64,14 +65,46 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
   const handleCommitImport = () => {
     if (!parsedData || !parsedData.title) return;
 
-    onImportSave({
-      ...parsedData,
-      categoryId: targetCategory || parsedData.categoryId || (categories[0]?.id || ''),
-      status: 'active',
-      createdAt: new Date().toISOString()
-    });
+    const portfolioEntry = {
+      id: `port_${Date.now()}`,
+      title: parsedData.title,
+      description: parsedData.description,
+      liveUrl: parsedData.liveUrl || parsedData.sourceUrl,
+      sourceUrl: parsedData.sourceUrl,
+      image: parsedData.images && parsedData.images.length > 0 ? parsedData.images[0] : ''
+    };
 
-    showToast(`Проект «${parsedData.title}» добавлен в категорию!`, 'success');
+    if (targetItemId === 'new' || items.length === 0) {
+      // Create new service item with this portfolio project
+      const newItem = {
+        title: parsedData.title,
+        description: parsedData.description,
+        price: parsedData.price || 500,
+        currency: parsedData.currency || 'BYN',
+        images: parsedData.images || [],
+        sourceUrl: parsedData.sourceUrl,
+        liveUrl: parsedData.liveUrl,
+        categoryId: targetCategory || (categories[0]?.id || ''),
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        portfolio: [portfolioEntry]
+      };
+      onImportSave(newItem);
+      showToast(`Создана новая услуга «${newItem.title}» с проектом портфолио!`, 'success');
+    } else {
+      // Attach to existing service item
+      const targetItem = items.find(i => i.id === targetItemId);
+      if (targetItem) {
+        const existingPortfolio = Array.isArray(targetItem.portfolio) ? targetItem.portfolio : [];
+        const updatedItem = {
+          ...targetItem,
+          portfolio: [...existingPortfolio, portfolioEntry]
+        };
+        onUpdateProduct(updatedItem);
+        showToast(`Проект «${portfolioEntry.title}» прикреплен к услуге «${targetItem.title}»!`, 'success');
+      }
+    }
+
     setParsedData(null);
     setUrlInput('');
   };
@@ -83,11 +116,11 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
       <div className="p-6 glass-panel rounded-3xl border border-gray-800 space-y-5">
         <div>
           <h2 className="text-xl font-extrabold text-gray-100 flex items-center gap-2">
-            <FolderGit2 className="w-5 h-5 text-cyan-400" />
-            <span>Добавление сайта из Репозитория Портфолио</span>
+            <FolderGit2 className="w-5 h-5 text-[#FF758F]" />
+            <span>Прикрепление проекта портфолио к услуге</span>
           </h2>
           <p className="text-xs text-gray-400 mt-1">
-            Выберите категорию/услугу из каталога, вставьте ссылку на сайт или проект из вашего репозитория портфолио и прикрепите его к услуге.
+            Укажите конкретную **Услугу в каталоге**, вставьте ссылку на проект из GitHub/портфолио, и он отобразится в карточке этой услуги.
           </p>
         </div>
 
@@ -95,22 +128,27 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
         <form onSubmit={handleParse} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             
-            {/* Category Selector */}
+            {/* Service / Item Selector */}
             <div className="sm:col-span-1">
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1 flex items-center gap-1">
-                <Layers className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Целевая услуга / категория</span>
+                <Package className="w-3.5 h-3.5 text-[#FF758F]" />
+                <span>Выберите услугу для привязки</span>
               </label>
               <select
-                value={targetCategory}
-                onChange={(e) => setTargetCategory(e.target.value)}
-                className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-3 border border-gray-800 focus:border-cyan-500 outline-none"
+                value={targetItemId}
+                onChange={(e) => setTargetItemId(e.target.value)}
+                className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-3 border border-gray-800 focus:border-[#FF758F] outline-none"
               >
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.icon} {cat.name}
-                  </option>
-                ))}
+                {items.length > 0 && (
+                  <optgroup label="Существующие услуги каталога">
+                    {items.map((it) => (
+                      <option key={it.id} value={it.id}>
+                        {it.title} ({Number(it.price).toLocaleString('ru-RU')} BYN)
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+                <option value="new">➕ Создать новую услугу для этого проекта</option>
               </select>
             </div>
 
@@ -128,14 +166,14 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
                     placeholder="https://github.com/vortexaiweb/portfolio/tree/main/1"
                     value={urlInput}
                     onChange={(e) => setUrlInput(e.target.value)}
-                    className="w-full bg-gray-900 text-gray-100 placeholder-gray-500 text-sm rounded-xl pl-10 pr-4 py-3 border border-gray-800 focus:border-cyan-500 outline-none"
+                    className="w-full bg-gray-900 text-gray-100 placeholder-gray-500 text-sm rounded-xl pl-10 pr-4 py-3 border border-gray-800 focus:border-[#FF758F] outline-none"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isParsing}
-                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-extrabold text-sm transition-all shadow-lg shadow-cyan-600/30 disabled:opacity-50 shrink-0"
+                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white font-extrabold text-sm transition-all shadow-lg shadow-rose-500/25 disabled:opacity-50 shrink-0"
                 >
                   <Sparkles className="w-4 h-4" />
                   <span>{isParsing ? 'Загрузка...' : 'Загрузить проект'}</span>
@@ -160,11 +198,11 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
                   setUrlInput(preset.url);
                   handleParse(null, preset.url);
                 }}
-                className="text-left p-3 rounded-xl bg-gray-900/80 hover:bg-gray-800 border border-gray-800 hover:border-cyan-500/40 transition-all group"
+                className="text-left p-3 rounded-xl bg-gray-900/80 hover:bg-gray-800 border border-gray-800 hover:border-[#FF758F]/40 transition-all group"
               >
-                <div className="text-xs font-bold text-gray-200 group-hover:text-cyan-400 flex items-center justify-between">
+                <div className="text-xs font-bold text-gray-200 group-hover:text-[#FF758F] flex items-center justify-between">
                   <span>{preset.name}</span>
-                  <Plus className="w-3.5 h-3.5 text-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Plus className="w-3.5 h-3.5 text-[#FF758F] opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <div className="text-[11px] text-gray-400 mt-1 line-clamp-1">{preset.desc}</div>
               </button>
@@ -182,11 +220,11 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
 
       {/* Parsed Preview Card & Editor */}
       {parsedData && (
-        <div className="glass-panel rounded-3xl p-6 border border-cyan-500/40 shadow-2xl space-y-6 animate-fade-in">
+        <div className="glass-panel rounded-3xl p-6 border border-[#FF758F]/40 shadow-2xl space-y-6 animate-fade-in">
           
           <div className="flex items-center justify-between pb-4 border-b border-gray-800">
-            <span className="px-3 py-1 rounded-xl text-xs font-extrabold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-              Предпросмотр услуги из портфолио
+            <span className="px-3 py-1 rounded-xl text-xs font-extrabold bg-[#FF758F]/10 text-[#FF758F] border border-[#FF758F]/25">
+              Предпросмотр проекта портфолио
             </span>
             <button
               onClick={() => setParsedData(null)}
@@ -202,14 +240,14 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1 flex items-center gap-1.5">
-                  <ImageIcon className="w-4 h-4 text-cyan-400" />
+                  <ImageIcon className="w-4 h-4 text-[#FF758F]" />
                   <span>Изображение / Скриншот (URL)</span>
                 </label>
                 <input
                   type="text"
                   value={parsedData.images[0] || ''}
                   onChange={(e) => setParsedData({ ...parsedData, images: [e.target.value] })}
-                  className="w-full bg-gray-900 text-gray-100 text-xs font-mono rounded-xl p-2.5 border border-gray-800 focus:border-cyan-500 outline-none"
+                  className="w-full bg-gray-900 text-gray-100 text-xs font-mono rounded-xl p-2.5 border border-gray-800 focus:border-[#FF758F] outline-none"
                 />
               </div>
 
@@ -226,13 +264,13 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">
-                  Ссылка на живое демо / сайт (Live URL)
+                  Ссылка на живой проект (Live URL)
                 </label>
                 <input
                   type="url"
                   value={parsedData.liveUrl || ''}
                   onChange={(e) => setParsedData({ ...parsedData, liveUrl: e.target.value })}
-                  className="w-full bg-gray-900 text-gray-100 text-xs rounded-xl p-2.5 border border-gray-800 focus:border-cyan-500 outline-none"
+                  className="w-full bg-gray-900 text-gray-100 text-xs rounded-xl p-2.5 border border-gray-800 focus:border-[#FF758F] outline-none"
                 />
               </div>
             </div>
@@ -241,40 +279,25 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">
-                  Название услуги / проекта
+                  Название работы / проекта
                 </label>
                 <input
                   type="text"
                   value={parsedData.title}
                   onChange={(e) => setParsedData({ ...parsedData, title: e.target.value })}
-                  className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2 border border-gray-800 focus:border-cyan-500 outline-none"
+                  className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2 border border-gray-800 focus:border-[#FF758F] outline-none"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              {targetItemId === 'new' && (
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">
-                    Ориентировочная цена (BYN)
-                  </label>
-                  <input
-                    type="number"
-                    value={parsedData.price}
-                    onChange={(e) => setParsedData({ ...parsedData, price: Number(e.target.value) })}
-                    className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2 border border-gray-800 focus:border-cyan-500 outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">
-                    Привязать к категории
+                    Категория для новой услуги
                   </label>
                   <select
                     value={targetCategory}
-                    onChange={(e) => {
-                      setTargetCategory(e.target.value);
-                      setParsedData({ ...parsedData, categoryId: e.target.value });
-                    }}
-                    className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2 border border-gray-800 focus:border-cyan-500 outline-none"
+                    onChange={(e) => setTargetCategory(e.target.value)}
+                    className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2 border border-gray-800 focus:border-[#FF758F] outline-none"
                   >
                     {categories.map((c) => (
                       <option key={c.id} value={c.id}>
@@ -283,17 +306,17 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
                     ))}
                   </select>
                 </div>
-              </div>
+              )}
 
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">
-                  Описание услуги и стек
+                  Описание работы и стека
                 </label>
                 <textarea
                   rows="4"
                   value={parsedData.description}
                   onChange={(e) => setParsedData({ ...parsedData, description: e.target.value })}
-                  className="w-full bg-gray-900 text-gray-100 text-xs rounded-xl p-3 border border-gray-800 focus:border-cyan-500 outline-none resize-none"
+                  className="w-full bg-gray-900 text-gray-100 text-xs rounded-xl p-3 border border-gray-800 focus:border-[#FF758F] outline-none resize-none"
                 />
               </div>
             </div>
@@ -310,10 +333,12 @@ export const PortfolioImporter = ({ categories, onImportSave }) => {
             
             <button
               onClick={handleCommitImport}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/30"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-400 hover:to-pink-400 text-white font-bold text-sm shadow-lg shadow-rose-500/25"
             >
               <Check className="w-4 h-4" />
-              <span>Добавить проект в услугу каталога</span>
+              <span>
+                {targetItemId === 'new' ? 'Создать услугу с портфолио' : 'Прикрепить проект к услуге'}
+              </span>
             </button>
           </div>
 
