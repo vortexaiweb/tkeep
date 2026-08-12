@@ -106,7 +106,9 @@ function formatKufarApiResult(ad, sourceUrl) {
     images = ad.images.map(img => {
       const path = typeof img === 'string' ? img : (img.path || img.filename);
       if (!path) return null;
-      if (path.startsWith('http')) return path;
+      if (path.startsWith('http://') || path.startsWith('https://')) return path;
+      if (path.startsWith('//')) return `https:${path}`;
+      if (path.includes('/')) return `https://rms4.kufar.by/v1/gallery/${path}`;
       return `https://img.kufar.by/v1/gallery/${path}`;
     }).filter(Boolean);
   }
