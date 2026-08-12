@@ -158,34 +158,19 @@ export const ProductEditModal = ({ isOpen, onClose, onSave, item, categories }) 
             </div>
           </div>
 
-          {/* Location and Status */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">
-                Город / Локация
-              </label>
-              <input
-                type="text"
-                placeholder="Минск"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2.5 border border-gray-800 focus:border-emerald-500 outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">
-                Статус публикации
-              </label>
-              <select
-                value={formData.status}
-                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2.5 border border-gray-800 focus:border-emerald-500 outline-none"
-              >
-                <option value="active">🟢 Опубликован (Active)</option>
-                <option value="draft">🔴 Черновик (Draft)</option>
-              </select>
-            </div>
+          {/* Status */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-1">
+              Статус публикации
+            </label>
+            <select
+              value={formData.status}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+              className="w-full bg-gray-900 text-gray-100 text-sm rounded-xl px-4 py-2.5 border border-gray-800 focus:border-rose-500 outline-none"
+            >
+              <option value="active">🟢 Опубликован (Active)</option>
+              <option value="draft">🔴 Черновик (Draft)</option>
+            </select>
           </div>
 
           {/* Description */}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapPin, ExternalLink, Share2, Eye, ShieldAlert } from 'lucide-react';
+import { ExternalLink, Share2, Eye, ShieldAlert } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 
 export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
@@ -93,12 +93,6 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
               <span>{Number(item.price).toLocaleString('ru-RU')}</span>
               <span className="text-sm font-semibold text-rose-300">{item.currency || 'BYN'}</span>
             </div>
-            {item.location && (
-              <div className="flex items-center gap-1 text-[11px] text-gray-400 mt-0.5">
-                <MapPin className="w-3 h-3 text-gray-500" />
-                <span>{item.location}</span>
-              </div>
-            )}
           </div>
 
           <button

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ExternalLink, Share2, MapPin, Calendar, Send, ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { X, ExternalLink, Share2, Calendar, Send, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 
 export const ProductDetailModal = ({ item, category, onClose }) => {
@@ -144,21 +144,15 @@ export const ProductDetailModal = ({ item, category, onClose }) => {
                   </span>
                 </div>
 
-                {/* Location & Date Metadata */}
-                <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 py-2 border-y border-gray-800">
-                  {item.location && (
-                    <div className="flex items-center gap-1.5">
-                      <MapPin className="w-4 h-4 text-[#FF758F]" />
-                      <span>{item.location}</span>
-                    </div>
-                  )}
-                  {item.createdAt && (
+                {/* Date Metadata */}
+                {item.createdAt && (
+                  <div className="flex items-center gap-4 text-xs text-gray-400 py-2 border-y border-gray-800">
                     <div className="flex items-center gap-1.5">
                       <Calendar className="w-4 h-4 text-gray-500" />
                       <span>{new Date(item.createdAt).toLocaleDateString('ru-RU')}</span>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* Description */}
                 <div>
