@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, Share2, Eye, ShieldAlert } from 'lucide-react';
+import { ExternalLink, Share2, Eye, ShieldAlert, FolderGit2 } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 
 export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
@@ -17,6 +17,7 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
   };
 
   const mainImage = item.images && item.images.length > 0 ? item.images[0] : 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?q=80&w=800';
+  const portfolioCount = Array.isArray(item.portfolio) ? item.portfolio.length : 0;
 
   return (
     <div
@@ -43,6 +44,12 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
           {category && (
             <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-gray-950/80 backdrop-blur-md text-[#FF758F] border border-[#FF758F]/25">
               {category.icon} {category.name}
+            </span>
+          )}
+          {portfolioCount > 0 && (
+            <span className="px-2.5 py-1 rounded-lg text-xs font-extrabold bg-gradient-to-r from-rose-500 to-pink-500 text-white backdrop-blur-md border border-rose-400/40 flex items-center gap-1 shadow-md">
+              <FolderGit2 className="w-3.5 h-3.5" />
+              <span>{portfolioCount} {portfolioCount === 1 ? 'работа' : 'работы'} в портфолио</span>
             </span>
           )}
           {item.sourceUrl && (
@@ -83,6 +90,31 @@ export const ProductCard = ({ item, category, onSelect, isAdmin }) => {
           <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed mb-3">
             {item.description || 'Описание отсутствует'}
           </p>
+
+          {/* Portfolio Examples List on Card */}
+          {portfolioCount > 0 && (
+            <div className="mt-2 pt-2 border-t border-gray-800/80">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-[#FF758F] flex items-center gap-1 mb-1.5">
+                <FolderGit2 className="w-3.5 h-3.5" />
+                <span>Примеры портфолио ({portfolioCount}):</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                {item.portfolio.slice(0, 2).map((proj, idx) => (
+                  <div key={idx} className="flex items-center justify-between text-xs bg-gray-900/80 px-2.5 py-1.5 rounded-lg border border-gray-800/90 text-gray-300">
+                    <span className="truncate font-medium">{proj.title}</span>
+                    {(proj.liveUrl || proj.sourceUrl) && (
+                      <span className="text-[10px] text-[#FF758F] font-bold shrink-0 ml-2">Демо ↗</span>
+                    )}
+                  </div>
+                ))}
+                {portfolioCount > 2 && (
+                  <div className="text-[10px] text-gray-400 text-right pt-0.5">
+                    + ещё {portfolioCount - 2}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Bottom Details */}
