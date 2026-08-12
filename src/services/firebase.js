@@ -23,32 +23,28 @@ import {
   createUserWithEmailAndPassword
 } from 'firebase/auth';
 
-// Firebase configuration object.
+// Real Firebase configuration for tkeep-cfdad
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "YOUR_API_KEY",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "YOUR_PROJECT_ID",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "YOUR_SENDER_ID",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "YOUR_APP_ID"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyD17ubRJ7KtP2YMQTfIz0UxB7DjY_XxHko",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "tkeep-cfdad.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "tkeep-cfdad",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "tkeep-cfdad.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "1006028062915",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:1006028062915:web:5cf894bbd00d43c33ca276",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-1CLYLVJEJB"
 };
-
-// Check if config is configured or mock fallback
-const isConfigured = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY";
 
 let app, db, auth;
 
 try {
-  if (isConfigured) {
-    app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    auth = getAuth(app);
-  }
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  auth = getAuth(app);
 } catch (e) {
-  console.warn("Firebase initialization skipped or failed. Falling back to local storage mock mode:", e);
+  console.warn("Firebase initialization warning:", e);
 }
 
-export { db, auth, isConfigured };
+export { db, auth };
 
 // Demo Categories for Seeding
 const DEMO_CATEGORIES = [
@@ -58,10 +54,10 @@ const DEMO_CATEGORIES = [
   { id: 'cat_home', name: 'Дом и Сад', icon: '🏠', sortOrder: 4 }
 ];
 
-// Initial Demo Items (STRICTLY EMPTY by default)
+// Initial Demo Items (STRICTLY EMPTY)
 const DEMO_ITEMS = [];
 
-// LocalStorage Helper for fallback mode
+// LocalStorage Helper for offline fallback
 const getLocalData = (key, defaultVal) => {
   try {
     const data = localStorage.getItem(`tkeep_${key}`);
@@ -79,7 +75,7 @@ const setLocalData = (key, value) => {
   }
 };
 
-// Seed Local / Firestore Data
+// Seed Initial Data to Firestore
 export const seedInitialData = async () => {
   if (db) {
     try {
@@ -95,11 +91,10 @@ export const seedInitialData = async () => {
         }
       }
     } catch (err) {
-      console.warn("Firestore seed fallback to localStorage:", err);
+      console.warn("Firestore categories seed fallback:", err);
     }
   }
 
-  // Local Storage Seeding
   try {
     if (!localStorage.getItem('tkeep_categories')) {
       setLocalData('categories', DEMO_CATEGORIES);
@@ -112,16 +107,7 @@ export const seedInitialData = async () => {
   }
 };
 
-// Clear All Local Items Helper
-export const clearAllLocalItems = () => {
-  try {
-    localStorage.setItem('tkeep_items', JSON.stringify([]));
-  } catch (e) {
-    console.error("Failed to clear local items", e);
-  }
-};
-
-// SUBSCRIBE / FETCH CATEGORIES
+// SUBSCRIBE / FETCH CATEGORIES (Realtime Cloud Sync)
 export const subscribeCategories = (callback) => {
   if (db) {
     const q = query(collection(db, 'categories'), orderBy('sortOrder', 'asc'));
@@ -129,11 +115,12 @@ export const subscribeCategories = (callback) => {
       const categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       if (categories.length > 0) {
         callback(categories);
+        setLocalData('categories', categories);
       } else {
         callback(getLocalData('categories', DEMO_CATEGORIES));
       }
     }, (err) => {
-      console.warn("Firestore categories error, falling to local:", err);
+      console.warn("Firestore categories realtime listener fallback:", err);
       callback(getLocalData('categories', DEMO_CATEGORIES));
     });
   } else {
@@ -142,7 +129,7 @@ export const subscribeCategories = (callback) => {
   }
 };
 
-// SUBSCRIBE / FETCH ITEMS
+// SUBSCRIBE / FETCH ITEMS (Realtime Cloud Sync across ALL users globally)
 export const subscribeItems = (callback, isAdmin = false) => {
   if (db) {
     const colRef = collection(db, 'items');
@@ -151,8 +138,9 @@ export const subscribeItems = (callback, isAdmin = false) => {
     return onSnapshot(q, (snapshot) => {
       const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       callback(items);
+      setLocalData('items', items);
     }, (err) => {
-      console.warn("Firestore items listener fallback to local:", err);
+      console.warn("Firestore items realtime listener fallback:", err);
       const local = getLocalData('items', []);
       callback(isAdmin ? local : local.filter(i => i.status === 'active'));
     });
@@ -225,7 +213,7 @@ export const deleteCategoryItem = async (id) => {
   setLocalData('categories', filtered);
 };
 
-// PRODUCT / ITEM CRUD
+// PRODUCT / ITEM CRUD (Direct Cloud Database Writes)
 export const addProductItem = async (itemData) => {
   const newId = itemData.id || `item_${Date.now()}`;
   const payload = {
